@@ -1,5 +1,5 @@
 {
-  "name": "@fm/server-slide-rendering",
+  "name": "@fm/server-side-rendering",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
