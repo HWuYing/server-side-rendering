@@ -1,6 +1,9 @@
-import { AppContextService as SharedAppContextService } from '@fm/shared/providers/app-context';
-import { of } from 'rxjs';
-export class AppContextService extends SharedAppContextService {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AppContextService = void 0;
+const app_context_1 = require("@fm/shared/providers/app-context");
+const rxjs_1 = require("rxjs");
+class AppContextService extends app_context_1.AppContextService {
     pageFileSource = {};
     microMiddlewareList = [];
     readStaticFile(url) {
@@ -9,7 +12,7 @@ export class AppContextService extends SharedAppContextService {
         const fileCache = { type: 'file-static', source };
         this.pageFileSource[url] = fileCache;
         resource[url] = fileCache;
-        return of(source);
+        return (0, rxjs_1.of)(source);
     }
     registryMicroMidder(middleware) {
         this.microMiddlewareList.push(middleware);
@@ -24,3 +27,4 @@ export class AppContextService extends SharedAppContextService {
         return this.microMiddlewareList;
     }
 }
+exports.AppContextService = AppContextService;
