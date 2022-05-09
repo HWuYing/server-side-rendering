@@ -19,7 +19,7 @@ class Platform {
         this.rootInjector = (0, di_1.getProvider)(di_1.Injector);
     }
     bootstrapRender(render) {
-        exports.render = this.proxyRender.bind(this, render);
+        registryRender(this.proxyRender.bind(this, render));
     }
     async proxyRender(render, global, isMicro = false) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
