@@ -1,5 +1,5 @@
+import { Observable } from '@fm/import-rxjs';
 import { AppContextService as SharedAppContextService } from '@fm/shared/providers/app-context';
-import { Observable } from 'rxjs';
 declare type MicroMiddleware = () => Observable<any>;
 export declare class AppContextService extends SharedAppContextService {
     private pageFileSource;

@@ -2,11 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Platform = void 0;
 const di_1 = require("@fm/di");
+const import_rxjs_1 = require("@fm/import-rxjs");
 const app_context_1 = require("@fm/shared/providers/app-context");
 const json_config_1 = require("@fm/shared/providers/json-config");
 const token_1 = require("@fm/shared/token");
-const rxjs_1 = require("rxjs");
-const operators_1 = require("rxjs/operators");
 const micro_1 = require("../../micro");
 const app_context_2 = require("../app-context");
 const json_config_2 = require("../json-config");
@@ -48,7 +47,7 @@ class Platform {
         return injector;
     }
     mergeMicroToSSR(middleware) {
-        return ({ html = ``, styles = ``, js = [], links = [], microTags = [], microFetchData = [] }) => middleware().pipe((0, operators_1.map)(({ microName, microResult }) => ({
+        return ({ html = ``, styles = ``, js = [], links = [], microTags = [], microFetchData = [] }) => middleware().pipe((0, import_rxjs_1.map)(({ microName, microResult }) => ({
             html: html.replace(`<!-- ${microName} -->`, microResult.html),
             styles: styles + microResult.styles,
             js: js.concat(...microResult.js || []),
@@ -60,7 +59,7 @@ class Platform {
     async execlMicroMiddleware(injector, options) {
         const appContext = injector.get(app_context_1.AppContextService);
         const fetchData = appContext.getAllFileSource();
-        return (0, rxjs_1.lastValueFrom)(appContext.getpageMicroMiddleware().reduce((input, middleware) => (input.pipe((0, operators_1.switchMap)(this.mergeMicroToSSR(middleware)))), (0, rxjs_1.of)(options))).then((execlResult) => ({ ...execlResult, fetchData }));
+        return (0, import_rxjs_1.lastValueFrom)(appContext.getpageMicroMiddleware().reduce((input, middleware) => (input.pipe((0, import_rxjs_1.switchMap)(this.mergeMicroToSSR(middleware)))), (0, import_rxjs_1.of)(options))).then((execlResult) => ({ ...execlResult, fetchData }));
     }
     getLocation(request, isMicro) {
         const { pathname = '' } = request.params;
