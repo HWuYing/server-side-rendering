@@ -5,8 +5,8 @@ const di_1 = require("@fm/di");
 const app_context_1 = require("@fm/shared/providers/app-context");
 const json_config_1 = require("@fm/shared/providers/json-config");
 const token_1 = require("@fm/shared/token");
-const import_rxjs_1 = require("@fm/import-rxjs");
-const import_rxjs_2 = require("@fm/import-rxjs");
+const rxjs_1 = require("rxjs");
+const operators_1 = require("rxjs/operators");
 const micro_1 = require("../../micro");
 const app_context_2 = require("../app-context");
 const json_config_2 = require("../json-config");
@@ -48,7 +48,7 @@ class Platform {
         return injector;
     }
     mergeMicroToSSR(middleware) {
-        return ({ html = ``, styles = ``, js = [], links = [], microTags = [], microFetchData = [] }) => middleware().pipe((0, import_rxjs_2.map)(({ microName, microResult }) => ({
+        return ({ html = ``, styles = ``, js = [], links = [], microTags = [], microFetchData = [] }) => middleware().pipe((0, operators_1.map)(({ microName, microResult }) => ({
             html: html.replace(`<!-- ${microName} -->`, microResult.html),
             styles: styles + microResult.styles,
             js: js.concat(...microResult.js || []),
@@ -60,7 +60,7 @@ class Platform {
     async execlMicroMiddleware(injector, options) {
         const appContext = injector.get(app_context_1.AppContextService);
         const fetchData = appContext.getAllFileSource();
-        return appContext.getpageMicroMiddleware().reduce((input, middleware) => (input.pipe((0, import_rxjs_2.switchMap)(this.mergeMicroToSSR(middleware)))), (0, import_rxjs_1.of)(options))
+        return appContext.getpageMicroMiddleware().reduce((input, middleware) => (input.pipe((0, operators_1.switchMap)(this.mergeMicroToSSR(middleware)))), (0, rxjs_1.of)(options))
             .toPromise()
             .then((execlResult) => ({ ...execlResult, fetchData }));
     }

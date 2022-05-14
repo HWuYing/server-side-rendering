@@ -1,7 +1,7 @@
 import { LocatorStorage } from '@fm/di';
 import { HttpClient } from '@fm/shared/common/http';
 import { MicroManageInterface } from '@fm/shared/micro';
-import { Observable, Subject } from '@fm/import-rxjs';
+import { Observable, Subject } from 'rxjs';
 export declare class MicroManage implements MicroManageInterface {
     private http;
     private ls;

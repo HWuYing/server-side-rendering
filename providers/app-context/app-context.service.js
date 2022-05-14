@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppContextService = void 0;
 const app_context_1 = require("@fm/shared/providers/app-context");
-const import_rxjs_1 = require("@fm/import-rxjs");
+const rxjs_1 = require("rxjs");
 class AppContextService extends app_context_1.AppContextService {
     pageFileSource = {};
     microMiddlewareList = [];
@@ -12,7 +12,7 @@ class AppContextService extends app_context_1.AppContextService {
         const fileCache = { type: 'file-static', source };
         this.pageFileSource[url] = fileCache;
         resource[url] = fileCache;
-        return (0, import_rxjs_1.of)(source);
+        return (0, rxjs_1.of)(source);
     }
     registryMicroMidder(middleware) {
         this.microMiddlewareList.push(middleware);
