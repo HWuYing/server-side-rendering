@@ -60,9 +60,7 @@ class Platform {
     async execlMicroMiddleware(injector, options) {
         const appContext = injector.get(app_context_1.AppContextService);
         const fetchData = appContext.getAllFileSource();
-        return appContext.getpageMicroMiddleware().reduce((input, middleware) => (input.pipe((0, operators_1.switchMap)(this.mergeMicroToSSR(middleware)))), (0, rxjs_1.of)(options))
-            .toPromise()
-            .then((execlResult) => ({ ...execlResult, fetchData }));
+        return (0, rxjs_1.lastValueFrom)(appContext.getpageMicroMiddleware().reduce((input, middleware) => (input.pipe((0, operators_1.switchMap)(this.mergeMicroToSSR(middleware)))), (0, rxjs_1.of)(options))).then((execlResult) => ({ ...execlResult, fetchData }));
     }
     getLocation(request, isMicro) {
         const { pathname = '' } = request.params;
