@@ -1,2 +1,6 @@
-import { Platform } from './platform';
-export const dynamicPlatform = (providers = []) => new Platform(providers);
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.dynamicPlatform = void 0;
+const platform_1 = require("./platform");
+const dynamicPlatform = (providers = []) => new platform_1.Platform(providers);
+exports.dynamicPlatform = dynamicPlatform;

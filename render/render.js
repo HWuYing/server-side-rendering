@@ -1,9 +1,13 @@
-import fs from 'fs';
-import { createRequire, Module as NativeModule } from 'module';
-import fetch from 'node-fetch';
-import path from 'path';
-import vm from 'vm';
-export class Render {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Render = void 0;
+const tslib_1 = require("tslib");
+const fs_1 = tslib_1.__importDefault(require("fs"));
+const module_1 = require("module");
+const node_fetch_1 = tslib_1.__importDefault(require("node-fetch"));
+const path_1 = tslib_1.__importDefault(require("path"));
+const vm_1 = tslib_1.__importDefault(require("vm"));
+class Render {
     entryFile;
     host;
     index;
@@ -39,7 +43,7 @@ export class Render {
     }
     proxyFetch(url, init) {
         const _url = /http|https/.test(url) ? url : `${this.host}/${url.replace(/^[/]+/, '')}`;
-        return fetch(_url, init).then((res) => {
+        return (0, node_fetch_1.default)(_url, init).then((res) => {
             const { status, statusText } = res;
             if (![404, 504].includes(status)) {
                 return res;
@@ -50,8 +54,8 @@ export class Render {
     readHtmlTemplate() {
         const rex = this.innerHeadFlag;
         let template = `${rex}${this.innerHtmlFlag}`;
-        if (this.index && fs.existsSync(this.index)) {
-            template = fs.readFileSync(this.index, 'utf-8');
+        if (this.index && fs_1.default.existsSync(this.index)) {
+            template = fs_1.default.readFileSync(this.index, 'utf-8');
             template.replace(rex, '').replace('</head>', `${rex}</head>`);
         }
         if (this.isDevelopment) {
@@ -66,13 +70,13 @@ export class Render {
         if (typeof staticDir === 'function') {
             staticDir = staticDir(url);
         }
-        const filePath = staticDir ? path.join(staticDir, url) : '';
-        return filePath && fs.existsSync(filePath) ? fs.readFileSync(filePath, 'utf-8') : '';
+        const filePath = staticDir ? path_1.default.join(staticDir, url) : '';
+        return filePath && fs_1.default.existsSync(filePath) ? fs_1.default.readFileSync(filePath, 'utf-8') : '';
     }
     readAssetsSync() {
         let assetsResult = '{}';
-        if (this.manifestFile && fs.existsSync(this.manifestFile)) {
-            assetsResult = fs.readFileSync(this.manifestFile, 'utf-8');
+        if (this.manifestFile && fs_1.default.existsSync(this.manifestFile)) {
+            assetsResult = fs_1.default.readFileSync(this.manifestFile, 'utf-8');
         }
         return JSON.parse(assetsResult);
     }
@@ -89,12 +93,12 @@ export class Render {
     factoryVmScript() {
         const Reflect = global.Reflect;
         const registryRender = (render) => this._compiledRender = render;
-        const m = { exports: {}, require: createRequire(this.entryFile) };
-        const wrapper = NativeModule.wrap(fs.readFileSync(this.entryFile, 'utf-8'));
-        const script = new vm.Script(wrapper, { filename: 'server-entry.js', displayErrors: true });
+        const m = { exports: {}, require: (0, module_1.createRequire)(this.entryFile) };
+        const wrapper = module_1.Module.wrap(fs_1.default.readFileSync(this.entryFile, 'utf-8'));
+        const script = new vm_1.default.Script(wrapper, { filename: 'server-entry.js', displayErrors: true });
         const timerContext = { setTimeout, setInterval, clearInterval, clearTimeout };
         const vmContext = { Reflect, Buffer, process, console, registryRender, ...timerContext, ...this.vmContext };
-        const context = vm.createContext(vmContext);
+        const context = vm_1.default.createContext(vmContext);
         const compiledWrapper = script.runInContext(context);
         compiledWrapper(m.exports, m.require, m);
     }
@@ -136,3 +140,4 @@ export class Render {
         return '<!-- inner-html -->';
     }
 }
+exports.Render = Render;
