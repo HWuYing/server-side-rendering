@@ -1,5 +1,5 @@
-import { of } from '@fm/import-rxjs';
 import { AppContextService as SharedAppContextService } from '@fm/shared/providers/app-context';
+import { of } from 'rxjs';
 export class AppContextService extends SharedAppContextService {
     pageFileSource = {};
     microMiddlewareList = [];

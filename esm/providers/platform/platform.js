@@ -1,8 +1,9 @@
 import { getProvider, Injector, StaticInjector } from '@fm/di';
-import { lastValueFrom, map, of, switchMap } from '@fm/import-rxjs';
 import { APP_CONTEXT, AppContextService } from '@fm/shared/providers/app-context';
 import { JsonConfigService } from '@fm/shared/providers/json-config';
 import { HISTORY } from '@fm/shared/token';
+import { lastValueFrom, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { MicroManage } from '../../micro';
 import { AppContextService as ServerAppContextService } from '../app-context';
 import { JsonConfigService as ServerJsonConfigService } from '../json-config';

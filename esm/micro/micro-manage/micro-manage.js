@@ -1,11 +1,12 @@
 import { __decorate, __metadata } from "tslib";
 import { Injectable, LocatorStorage } from '@fm/di';
-import { catchError, forkJoin, map, of, shareReplay, switchMap } from '@fm/import-rxjs';
 import { HttpClient } from '@fm/shared/common/http';
 import { createMicroElementTemplate, templateZip } from '@fm/shared/micro';
 import { AppContextService } from '@fm/shared/providers/app-context';
 import { HISTORY } from '@fm/shared/token';
 import { cloneDeep, isEmpty } from 'lodash';
+import { forkJoin, of } from 'rxjs';
+import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
 let MicroManage = class MicroManage {
     http;
     ls;

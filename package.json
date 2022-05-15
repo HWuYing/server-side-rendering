@@ -5,6 +5,50 @@
   "main": "./cjs/index.js",
   "module": "./esm5/index.js",
   "es2015": "./esm/index.js",
+  "exports": {
+    ".": {
+      "node": "./cjs/index.js",
+      "require": "./cjs/index.js",
+      "es2015": "./esm/index.js",
+      "default": "./esm5/index.js"
+    },
+    "./render": {
+      "node": "./cjs/render/index.js",
+      "require": "./cjs/render/index.js",
+      "es2015": "./esm/render/index.js",
+      "default": "./esm5/render/index.js"
+    },
+    "./providers": {
+      "node": "./cjs/providers/index.js",
+      "require": "./cjs/providers/index.js",
+      "es2015": "./esm/providers/index.js",
+      "default": "./esm5/providers/index.js"
+    },
+    "./providers/app-context": {
+      "node": "./cjs/providers/app-context/index.js",
+      "require": "./cjs/providers/app-context/index.js",
+      "es2015": "./esm/providers/app-context/index.js",
+      "default": "./esm5/providers/app-context/index.js"
+    },
+    "./providers/platform": {
+      "node": "./cjs/providers/platform/index.js",
+      "require": "./cjs/providers/platform/index.js",
+      "es2015": "./esm/providers/platform/index.js",
+      "default": "./esm5/providers/platform/index.js"
+    },
+    "./providers/json-config": {
+      "node": "./cjs/providers/json-config/index.js",
+      "require": "./cjs/providers/json-config/index.js",
+      "es2015": "./esm/providers/json-config/index.js",
+      "default": "./esm5/providers/json-config/index.js"
+    },
+    "./token": {
+      "node": "./cjs/token/index.js",
+      "require": "./cjs/token/index.js",
+      "es2015": "./esm/token/index.js",
+      "default": "./esm5/token/index.js"
+    }
+  },
   "dependencies": {
     "@fm/import-rxjs": "git+https://github.com/hwyn/import-rxjs.git"
   },

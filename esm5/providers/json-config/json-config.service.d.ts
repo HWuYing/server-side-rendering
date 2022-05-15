@@ -2,5 +2,5 @@ import { JsonConfigService as ShareJsonConfigService } from '@fm/shared/provider
 import { AppContextService } from '../app-context';
 export declare class JsonConfigService extends ShareJsonConfigService {
     protected appContext: AppContextService;
-    protected getServerFetchData(url: string): import("rxjs/internal/Observable").Observable<any>;
+    protected getServerFetchData(url: string): import("rxjs").Observable<any>;
 }
