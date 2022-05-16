@@ -91,13 +91,12 @@ class Render {
         return staticAssets;
     }
     factoryVmScript() {
-        const Reflect = global.Reflect;
         const registryRender = (render) => this._compiledRender = render;
         const m = { exports: {}, require: (0, module_1.createRequire)(this.entryFile) };
         const wrapper = module_1.Module.wrap(fs_1.default.readFileSync(this.entryFile, 'utf-8'));
         const script = new vm_1.default.Script(wrapper, { filename: 'server-entry.js', displayErrors: true });
         const timerContext = { setTimeout, setInterval, clearInterval, clearTimeout };
-        const vmContext = { Reflect, Buffer, process, console, registryRender, ...timerContext, ...this.vmContext };
+        const vmContext = { Buffer, process, console, registryRender, ...timerContext, ...this.vmContext };
         const context = vm_1.default.createContext(vmContext);
         const compiledWrapper = script.runInContext(context);
         compiledWrapper(m.exports, m.require, m);
