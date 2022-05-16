@@ -28,7 +28,7 @@ let MicroManage = class MicroManage {
             const { location: { pathname } } = this.ls.getProvider(HISTORY);
             const microPath = `/${proxyMicroUrl(microName, `/micro-ssr/${pathname}`)}`.replace(/[/]+/g, '/');
             subject = this.http.get(`${this.proxy}${microPath}`).pipe(catchError((error) => of({ html: `${microName}<br/>${error.message}`, styles: '' })), switchMap((microResult) => this.reeadLinkToStyles(microName, microResult)), map((microResult) => ({ microResult: this.createMicroTag(microName, microResult), microName })), shareReplay(1));
-            subject.subscribe(() => void (0), () => void (0));
+            subject.subscribe({ next: () => void (0), error: () => void (0) });
             this.appContext.registryMicroMidder(() => subject);
             this.microCache.set(microName, subject);
         }
