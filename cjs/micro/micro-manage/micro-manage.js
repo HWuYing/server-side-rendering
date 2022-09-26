@@ -12,15 +12,15 @@ const rxjs_1 = require("rxjs");
 const operators_1 = require("rxjs/operators");
 let MicroManage = class MicroManage {
     http;
-    ls;
+    injector;
     proxy;
     microCache = new Map();
     microStaticCache = new Map();
     appContext;
-    constructor(http, ls) {
+    constructor(http, injector) {
         this.http = http;
-        this.ls = ls;
-        this.appContext = this.ls.getProvider(app_context_1.AppContextService);
+        this.injector = injector;
+        this.appContext = this.injector.get(app_context_1.AppContextService);
         this.proxy = this.appContext.getContext().proxyHost;
     }
     bootstrapMicro(microName) {
@@ -28,7 +28,7 @@ let MicroManage = class MicroManage {
         const context = this.appContext.getContext();
         if (!subject) {
             const proxyMicroUrl = context.microSSRPath;
-            const { location: { pathname } } = this.ls.getProvider(token_1.HISTORY);
+            const { location: { pathname } } = this.injector.get(token_1.HISTORY);
             const microPath = `/${proxyMicroUrl(microName, `/micro-ssr/${pathname}`)}`.replace(/[/]+/g, '/');
             subject = this.http.get(`${this.proxy}${microPath}`).pipe((0, operators_1.catchError)((error) => (0, rxjs_1.of)({ html: `${microName}<br/>${error.message}`, styles: '' })), (0, operators_1.switchMap)((microResult) => this.reeadLinkToStyles(microName, microResult)), (0, operators_1.map)((microResult) => ({ microResult: this.createMicroTag(microName, microResult), microName })), (0, operators_1.shareReplay)(1));
             subject.subscribe({ next: () => void (0), error: () => void (0) });
@@ -63,6 +63,6 @@ let MicroManage = class MicroManage {
 };
 MicroManage = tslib_1.__decorate([
     (0, di_1.Injectable)(),
-    tslib_1.__metadata("design:paramtypes", [http_1.HttpClient, di_1.LocatorStorage])
+    tslib_1.__metadata("design:paramtypes", [http_1.HttpClient, di_1.Injector])
 ], MicroManage);
 exports.MicroManage = MicroManage;

@@ -1,5 +1,5 @@
 import { __decorate, __metadata } from "tslib";
-import { Injectable, LocatorStorage } from '@fm/di';
+import { Injectable, Injector } from '@fm/di';
 import { HttpClient } from '@fm/shared/common/http';
 import { createMicroElementTemplate, templateZip } from '@fm/shared/micro';
 import { AppContextService } from '@fm/shared/providers/app-context';
@@ -9,15 +9,15 @@ import { forkJoin, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
 let MicroManage = class MicroManage {
     http;
-    ls;
+    injector;
     proxy;
     microCache = new Map();
     microStaticCache = new Map();
     appContext;
-    constructor(http, ls) {
+    constructor(http, injector) {
         this.http = http;
-        this.ls = ls;
-        this.appContext = this.ls.getProvider(AppContextService);
+        this.injector = injector;
+        this.appContext = this.injector.get(AppContextService);
         this.proxy = this.appContext.getContext().proxyHost;
     }
     bootstrapMicro(microName) {
@@ -25,7 +25,7 @@ let MicroManage = class MicroManage {
         const context = this.appContext.getContext();
         if (!subject) {
             const proxyMicroUrl = context.microSSRPath;
-            const { location: { pathname } } = this.ls.getProvider(HISTORY);
+            const { location: { pathname } } = this.injector.get(HISTORY);
             const microPath = `/${proxyMicroUrl(microName, `/micro-ssr/${pathname}`)}`.replace(/[/]+/g, '/');
             subject = this.http.get(`${this.proxy}${microPath}`).pipe(catchError((error) => of({ html: `${microName}<br/>${error.message}`, styles: '' })), switchMap((microResult) => this.reeadLinkToStyles(microName, microResult)), map((microResult) => ({ microResult: this.createMicroTag(microName, microResult), microName })), shareReplay(1));
             subject.subscribe({ next: () => void (0), error: () => void (0) });
@@ -60,6 +60,6 @@ let MicroManage = class MicroManage {
 };
 MicroManage = __decorate([
     Injectable(),
-    __metadata("design:paramtypes", [HttpClient, LocatorStorage])
+    __metadata("design:paramtypes", [HttpClient, Injector])
 ], MicroManage);
 export { MicroManage };
