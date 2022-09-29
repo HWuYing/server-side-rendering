@@ -1,6 +1,8 @@
+import { __decorate } from "tslib";
+import { Injectable } from '@fm/di';
 import { AppContextService as SharedAppContextService } from '@fm/shared/providers/app-context';
 import { of } from 'rxjs';
-export class AppContextService extends SharedAppContextService {
+let AppContextService = class AppContextService extends SharedAppContextService {
     pageFileSource = {};
     microMiddlewareList = [];
     readStaticFile(url) {
@@ -23,4 +25,8 @@ export class AppContextService extends SharedAppContextService {
     getpageMicroMiddleware() {
         return this.microMiddlewareList;
     }
-}
+};
+AppContextService = __decorate([
+    Injectable()
+], AppContextService);
+export { AppContextService };
