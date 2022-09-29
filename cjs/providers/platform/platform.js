@@ -22,8 +22,7 @@ class Platform {
         registryRender(this.proxyRender.bind(this, render));
     }
     async proxyRender(render, global, isMicro = false) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { fetch, request, location, readAssets, readStaticFile, proxyHost, microSSRPath, ..._global } = global;
+        const { fetch, request, readAssets, readStaticFile, proxyHost, microSSRPath, ..._global } = global;
         const microConfig = { fetch, isMicro, request, proxyHost, microSSRPath, readStaticFile, renderSSR: true, resource: this.resource };
         const injector = this.beforeBootstrapRender(microConfig, [
             { provide: token_1.HISTORY, useValue: { location: this.getLocation(request, isMicro), listen: () => () => void (0) } }

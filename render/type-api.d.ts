@@ -8,5 +8,5 @@ export interface SSROptions {
     vmContext?: {
         [key: string]: any;
     };
-    microSSRPathPrefix?: string;
+    microPrePath?: string;
 }

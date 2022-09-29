@@ -8,34 +8,25 @@ export class Render {
     host;
     index;
     microName;
+    microPrePath;
     manifestFile;
     _compiledRender;
     vmContext;
-    microSSRPathPrefix;
     staticDir;
     isDevelopment = process.env.NODE_ENV === 'development';
     constructor(entryFile, options) {
         this.entryFile = entryFile;
-        const { index, manifestFile, staticDir, microName, proxyTarget, microSSRPathPrefix } = options;
+        const { index, manifestFile, staticDir, microName, proxyTarget, microPrePath } = options;
         this.index = index || '';
         this.host = proxyTarget || 'http://127.0.0.1:3000';
         this.staticDir = staticDir || '';
         this.microName = microName || '';
         this.manifestFile = manifestFile;
-        this.microSSRPathPrefix = microSSRPathPrefix || '';
+        this.microPrePath = microPrePath || '';
         this.vmContext = options.vmContext || {};
     }
     microSSRPath(microName, pathname) {
-        return `/${this.microSSRPathPrefix}/${microName}${pathname}`;
-    }
-    get global() {
-        return {
-            proxyHost: this.host,
-            microSSRPath: this.microSSRPath.bind(this),
-            fetch: this.proxyFetch.bind(this),
-            readStaticFile: this.readStaticFile.bind(this),
-            readAssets: this.readAssets.bind(this)
-        };
+        return `/${this.microPrePath}/${microName}/micro-ssr/${pathname}`;
     }
     proxyFetch(url, init) {
         const _url = /http|https/.test(url) ? url : `${this.host}/${url.replace(/^[/]+/, '')}`;
@@ -46,6 +37,33 @@ export class Render {
             }
             throw new Error(`${status}: ${statusText}`);
         });
+    }
+    readAssets() {
+        const entrypoints = this.readAssetsSync();
+        const staticAssets = { js: [], links: [], linksToStyle: [] };
+        Object.keys(entrypoints).forEach((key) => {
+            const { js = [], css = [] } = entrypoints[key];
+            staticAssets.js.push(...js);
+            staticAssets.links.push(...css);
+        });
+        return staticAssets;
+    }
+    readStaticFile(url) {
+        let staticDir = this.staticDir;
+        if (typeof staticDir === 'function') {
+            staticDir = staticDir(url);
+        }
+        const filePath = staticDir ? path.join(staticDir, url) : '';
+        return filePath && fs.existsSync(filePath) ? fs.readFileSync(filePath, 'utf-8') : '';
+    }
+    get global() {
+        return {
+            proxyHost: this.host,
+            fetch: this.proxyFetch.bind(this),
+            readAssets: this.readAssets.bind(this),
+            microSSRPath: this.microSSRPath.bind(this),
+            readStaticFile: this.readStaticFile.bind(this)
+        };
     }
     readHtmlTemplate() {
         const rex = this.innerHeadFlag;
@@ -61,30 +79,12 @@ export class Render {
         }
         return template;
     }
-    readStaticFile(url) {
-        let staticDir = this.staticDir;
-        if (typeof staticDir === 'function') {
-            staticDir = staticDir(url);
-        }
-        const filePath = staticDir ? path.join(staticDir, url) : '';
-        return filePath && fs.existsSync(filePath) ? fs.readFileSync(filePath, 'utf-8') : '';
-    }
     readAssetsSync() {
         let assetsResult = '{}';
         if (this.manifestFile && fs.existsSync(this.manifestFile)) {
             assetsResult = fs.readFileSync(this.manifestFile, 'utf-8');
         }
         return JSON.parse(assetsResult);
-    }
-    readAssets() {
-        const entrypoints = this.readAssetsSync();
-        const staticAssets = { js: [], links: [], linksToStyle: [] };
-        Object.keys(entrypoints).forEach((key) => {
-            const { js = [], css = [] } = entrypoints[key];
-            staticAssets.js.push(...js);
-            staticAssets.links.push(...css);
-        });
-        return staticAssets;
     }
     factoryVmScript() {
         const registryRender = (render) => this._compiledRender = render;
@@ -110,8 +110,8 @@ export class Render {
         }
     }
     createScriptTemplate(scriptId, insertInfo) {
-        // eslint-disable-next-line max-len
-        return `<script id="${scriptId}">${insertInfo}(function(){ const script = document.querySelector('#${scriptId}');script.parentNode.removeChild(script);}());</script>`;
+        const evalFun = `(function(){ const script = document.querySelector('#${scriptId}');script.parentNode.removeChild(script);}());`;
+        return `<script id="${scriptId}">${insertInfo}${evalFun}</script>`;
     }
     async renderMicro(request, response) {
         const { html, styles, links, js, fetchData, microTags, microFetchData = [] } = await this._render(request, true);

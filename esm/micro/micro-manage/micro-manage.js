@@ -26,8 +26,8 @@ let MicroManage = class MicroManage {
         if (!subject) {
             const proxyMicroUrl = context.microSSRPath;
             const { location: { pathname } } = this.injector.get(HISTORY);
-            const microPath = `/${proxyMicroUrl(microName, `/micro-ssr/${pathname}`)}`.replace(/[/]+/g, '/');
-            subject = this.http.get(`${this.proxy}${microPath}`).pipe(catchError((error) => of({ html: `${microName}<br/>${error.message}`, styles: '' })), switchMap((microResult) => this.reeadLinkToStyles(microName, microResult)), map((microResult) => ({ microResult: this.createMicroTag(microName, microResult), microName })), shareReplay(1));
+            const microPath = proxyMicroUrl(microName, pathname).replace(/[/]+/g, '/');
+            subject = this.http.get(`${this.proxy}/${microPath}`).pipe(catchError((error) => of({ html: `${microName}<br/>${error.message}`, styles: '' })), switchMap((microResult) => this.reeadLinkToStyles(microName, microResult)), map((microResult) => ({ microResult: this.createMicroTag(microName, microResult), microName })), shareReplay(1));
             subject.subscribe({ next: () => void (0), error: () => void (0) });
             this.appContext.registryMicroMidder(() => subject);
             this.microCache.set(microName, subject);
