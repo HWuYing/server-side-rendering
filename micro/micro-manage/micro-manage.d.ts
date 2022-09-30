@@ -6,7 +6,7 @@ export declare class MicroManage implements MicroManageInterface {
     private http;
     private injector;
     sharedData: any;
-    private proxy;
+    private resource;
     private microCache;
     private microStaticCache;
     private appContext;

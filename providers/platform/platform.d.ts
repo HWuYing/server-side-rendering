@@ -6,7 +6,6 @@ declare type Render = (...args: any[]) => Promise<{
 export declare class Platform {
     private providers;
     private rootInjector;
-    private resource;
     constructor(providers?: Provider[]);
     bootstrapRender(render: Render): void;
     private proxyRender;

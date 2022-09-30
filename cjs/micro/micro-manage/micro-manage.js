@@ -10,10 +10,11 @@ const token_1 = require("@fm/shared/token");
 const lodash_1 = require("lodash");
 const rxjs_1 = require("rxjs");
 const operators_1 = require("rxjs/operators");
+const token_2 = require("../../token");
 let MicroManage = class MicroManage {
     http;
     injector;
-    proxy;
+    resource;
     microCache = new Map();
     microStaticCache = new Map();
     appContext;
@@ -21,16 +22,13 @@ let MicroManage = class MicroManage {
         this.http = http;
         this.injector = injector;
         this.appContext = this.injector.get(app_context_1.AppContextService);
-        this.proxy = this.appContext.getContext().proxyHost;
+        this.resource = this.injector.get(token_2.RESOURCE);
     }
     bootstrapMicro(microName) {
         let subject = this.microCache.get(microName);
-        const context = this.appContext.getContext();
         if (!subject) {
-            const proxyMicroUrl = context.microSSRPath;
             const { location: { pathname } } = this.injector.get(token_1.HISTORY);
-            const microPath = `/${proxyMicroUrl(microName, pathname)}`.replace(/[/]+/g, '/');
-            subject = this.http.get(`${this.proxy}${microPath}`).pipe((0, operators_1.catchError)((error) => (0, rxjs_1.of)({ html: `${microName}<br/>${error.message}`, styles: '' })), (0, operators_1.switchMap)((microResult) => this.reeadLinkToStyles(microName, microResult)), (0, operators_1.map)((microResult) => ({ microResult: this.createMicroTag(microName, microResult), microName })), (0, operators_1.shareReplay)(1));
+            subject = this.http.get(this.resource.generateMicroPath(microName, pathname)).pipe((0, operators_1.catchError)((error) => (0, rxjs_1.of)({ html: `${microName}<br/>${error.message}`, styles: '' })), (0, operators_1.switchMap)((microResult) => this.reeadLinkToStyles(microName, microResult)), (0, operators_1.map)((microResult) => ({ microResult: this.createMicroTag(microName, microResult), microName })), (0, operators_1.shareReplay)(1));
             subject.subscribe({ next: () => void (0), error: () => void (0) });
             this.appContext.registryMicroMidder(() => subject);
             this.microCache.set(microName, subject);
@@ -39,13 +37,17 @@ let MicroManage = class MicroManage {
     }
     reeadLinkToStyles(microName, microResult) {
         const { links = [] } = microResult;
-        return (0, lodash_1.isEmpty)(links) ? (0, rxjs_1.of)(microResult) : (0, rxjs_1.forkJoin)(links.map((href) => this.getLinkCache(`${this.proxy}${href}`))).pipe((0, operators_1.map)((styles) => ({ ...microResult, linkToStyles: styles })));
+        if ((0, lodash_1.isEmpty)(links)) {
+            return (0, rxjs_1.of)(microResult);
+        }
+        return (0, rxjs_1.forkJoin)(links.map((href) => this.getLinkCache(href))).pipe((0, operators_1.map)((styles) => ({ ...microResult, linkToStyles: styles })));
     }
     getLinkCache(href) {
-        let linkSubject = this.microStaticCache.get(href);
+        const linkUrl = this.resource.generateMicroStaticpath(href);
+        let linkSubject = this.microStaticCache.get(linkUrl);
         if (!linkSubject) {
-            linkSubject = this.http.getText(href).pipe((0, operators_1.shareReplay)(1), (0, operators_1.map)(lodash_1.cloneDeep));
-            this.microStaticCache.set(href, linkSubject);
+            linkSubject = this.http.getText(linkUrl).pipe((0, operators_1.shareReplay)(1), (0, operators_1.map)(lodash_1.cloneDeep));
+            this.microStaticCache.set(linkUrl, linkSubject);
         }
         return linkSubject;
     }

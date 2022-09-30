@@ -5,12 +5,12 @@ import { HISTORY } from '@fm/shared/token';
 import { lastValueFrom, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { MicroManage } from '../../micro';
+import { RESOURCE } from '../../token';
 import { AppContextService as ServerAppContextService } from '../app-context';
 import { JsonConfigService as ServerJsonConfigService } from '../json-config';
 export class Platform {
     providers;
     rootInjector;
-    resource = {};
     constructor(providers = []) {
         this.providers = providers;
         this.rootInjector = getProvider(Injector);
@@ -19,12 +19,13 @@ export class Platform {
         registryRender(this.proxyRender.bind(this, render));
     }
     async proxyRender(render, global, isMicro = false) {
-        const { fetch, request, readAssets, readStaticFile, proxyHost, microSSRPath, ..._global } = global;
-        const microConfig = { fetch, isMicro, request, proxyHost, microSSRPath, readStaticFile, renderSSR: true, resource: this.resource };
+        const { request, resource, ..._global } = global;
+        const microConfig = { isMicro, request, resource: resource.cache, fetch: resource.proxyFetch, renderSSR: true };
         const injector = this.beforeBootstrapRender(microConfig, [
+            { provide: RESOURCE, useValue: resource },
             { provide: HISTORY, useValue: { location: this.getLocation(request, isMicro), listen: () => () => void (0) } }
         ]);
-        const { js = [], links = [] } = readAssets();
+        const { js = [], links = [] } = resource.serializableAssets();
         const { html, styles } = await render(injector, { request, ..._global });
         const execlResult = await this.execlMicroMiddleware(injector, { html, styles, js, links, microTags: [], microFetchData: [] });
         injector.clear();
