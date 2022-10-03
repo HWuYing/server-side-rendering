@@ -2,12 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Platform = void 0;
 const di_1 = require("@fm/di");
+const micro_1 = require("@fm/shared/micro");
 const app_context_1 = require("@fm/shared/providers/app-context");
 const json_config_1 = require("@fm/shared/providers/json-config");
 const token_1 = require("@fm/shared/token");
 const rxjs_1 = require("rxjs");
 const operators_1 = require("rxjs/operators");
-const micro_1 = require("../../micro");
+const micro_2 = require("../../micro");
 const token_2 = require("../../token");
 const app_context_2 = require("../app-context");
 const json_config_2 = require("../json-config");
@@ -28,7 +29,7 @@ class Platform {
             { provide: token_2.RESOURCE, useValue: resource },
             { provide: token_1.HISTORY, useValue: { location: this.getLocation(request, isMicro), listen: () => () => void (0) } }
         ]);
-        const { js = [], links = [] } = resource.serializableAssets();
+        const { js = [], links = [] } = (0, micro_1.serializableAssets)(resource.readAssetsSync());
         const { html, styles } = await render(injector, { request, ..._global });
         const execlResult = await this.execlMicroMiddleware(injector, { html, styles, js, links, microTags: [], microFetchData: [] });
         injector.clear();
@@ -36,7 +37,7 @@ class Platform {
     }
     beforeBootstrapRender(context, providers = []) {
         const injector = new di_1.StaticInjector(this.rootInjector, { isScope: 'self' });
-        const appContext = { useMicroManage: () => injector.get(micro_1.MicroManage), ...context };
+        const appContext = { useMicroManage: () => injector.get(micro_2.MicroManage), ...context };
         const _providers = [
             ...this.providers,
             { provide: app_context_1.APP_CONTEXT, useValue: appContext },

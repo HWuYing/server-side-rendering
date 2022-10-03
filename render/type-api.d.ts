@@ -10,26 +10,21 @@ export declare abstract class ResourceInterface {
     abstract readAssetsSync(): {
         [key: string]: any;
     };
-    abstract serializableAssets(): {
-        js: [];
-        css: [];
-    };
     abstract readStaticFile(url: string): {
         type: string;
         source: any;
     };
 }
 export interface ResourceOptions {
+    staticDir?: string;
     proxyTarget?: string;
     manifestFile: string;
     microPrePath?: string;
-    staticDir?: string;
 }
 export interface SSROptions {
     microName?: string;
-    proxyTarget?: string;
+    resource: ResourceInterface;
     vmContext?: {
         [key: string]: any;
     };
-    resource: ResourceInterface;
 }

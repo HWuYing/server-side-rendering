@@ -11,10 +11,10 @@ class SSRControl {
     }
     async renderMicro(request, response) {
         request.params.pathname = request.path.replace(/\/micro-ssr/g, '');
-        await this.ssrVm.renderMicro(request, response);
+        response.json(await this.ssrVm.renderMicro(request));
     }
     async render(request, response) {
-        await this.ssrVm.render(request, response);
+        response.end(await this.ssrVm.render(request));
     }
 }
 tslib_1.__decorate([

@@ -9,15 +9,15 @@ class Render {
     entryFile;
     microName;
     _compiledRender;
-    vmContext;
     resource;
+    vmContext;
     isDevelopment = process.env.NODE_ENV === 'development';
     constructor(entryFile, options) {
         this.entryFile = entryFile;
-        const { microName, resource } = options;
+        const { resource, microName = '', vmContext = {} } = options;
         this.resource = resource;
-        this.microName = microName || '';
-        this.vmContext = options.vmContext || {};
+        this.microName = microName;
+        this.vmContext = vmContext;
     }
     factoryVmScript() {
         const registryRender = (render) => this._compiledRender = render;
@@ -26,8 +26,7 @@ class Render {
         const script = new vm_1.default.Script(wrapper, { filename: 'server-entry.js', displayErrors: true });
         const timerContext = { setTimeout, setInterval, clearInterval, clearTimeout };
         const vmContext = { Buffer, process, console, registryRender, ...timerContext, ...this.vmContext };
-        const context = vm_1.default.createContext(vmContext);
-        const compiledWrapper = script.runInContext(context);
+        const compiledWrapper = script.runInContext(vm_1.default.createContext(vmContext));
         compiledWrapper(m.exports, m.require, m);
     }
     async _render(request, isMicro) {
@@ -46,21 +45,24 @@ class Render {
         const evalFun = `(function(){ const script = document.querySelector('#${scriptId}');script.parentNode.removeChild(script);}());`;
         return `<script id="${scriptId}">${insertInfo}${evalFun}</script>`;
     }
-    async renderMicro(request, response) {
-        const { html, styles, links, js, fetchData, microTags, microFetchData = [] } = await this._render(request, true);
+    async renderMicro(request) {
+        const { html, styles, links, fetchData, microTags, microFetchData = [] } = await this._render(request, true);
         microFetchData.push({ microName: this.microName, source: fetchData });
-        response.json({ html, styles, links, js, microTags, microFetchData });
+        return { html, styles, links, microTags, microFetchData };
     }
-    async render(request, response) {
-        const chunkCss = this.resource.readAssetsSync()['chunk']?.css || [];
-        const { html, styles, fetchData, microTags = [], microFetchData = [] } = await this._render(request);
+    async render(request) {
+        const { js = [], links = [], html, styles, fetchData, microTags = [], microFetchData = [] } = await this._render(request);
         const _fetchData = this.createScriptTemplate('fetch-static', `var fetchCacheData = ${fetchData};`);
         const microData = this.createScriptTemplate('micro-fetch-static', `var microFetchData = ${JSON.stringify(microFetchData)};`);
-        const chunkLinks = chunkCss.map((href) => `<link rel="stylesheet" href="${href}">`).join('');
-        const _html = this.resource.generateHtmlTemplate()
+        const chunkCss = this.isDevelopment ? links : this.resource.readAssetsSync()['chunk']?.css || [];
+        const chunkLinks = chunkCss.map((href) => `<link href="${href}" rel="stylesheet">`).join('');
+        let headContent = `${chunkLinks}${styles}${_fetchData}${microData}${microTags.join('')}`;
+        if (this.isDevelopment) {
+            headContent += js.map((src) => `<script defer src="${src}"></script>`).join('');
+        }
+        return this.resource.generateHtmlTemplate()
             .replace(this.resource.innerHtmlFlag, html)
-            .replace(this.resource.innerHeadFlag, `${chunkLinks}${styles}${_fetchData}${microData}${microTags.join('')}`);
-        response.send(_html);
+            .replace(this.resource.innerHeadFlag, headContent);
     }
 }
 exports.Render = Render;

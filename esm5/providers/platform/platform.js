@@ -1,4 +1,5 @@
 import { getProvider, Injector, StaticInjector } from '@fm/di';
+import { serializableAssets } from '@fm/shared/micro';
 import { APP_CONTEXT, AppContextService } from '@fm/shared/providers/app-context';
 import { JsonConfigService } from '@fm/shared/providers/json-config';
 import { HISTORY } from '@fm/shared/token';
@@ -25,7 +26,7 @@ export class Platform {
             { provide: RESOURCE, useValue: resource },
             { provide: HISTORY, useValue: { location: this.getLocation(request, isMicro), listen: () => () => void (0) } }
         ]);
-        const { js = [], links = [] } = resource.serializableAssets();
+        const { js = [], links = [] } = serializableAssets(resource.readAssetsSync());
         const { html, styles } = await render(injector, { request, ..._global });
         const execlResult = await this.execlMicroMiddleware(injector, { html, styles, js, links, microTags: [], microFetchData: [] });
         injector.clear();

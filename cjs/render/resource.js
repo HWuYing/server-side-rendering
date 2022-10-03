@@ -6,16 +6,14 @@ const fs_1 = tslib_1.__importDefault(require("fs"));
 const node_fetch_1 = tslib_1.__importDefault(require("node-fetch"));
 const path_1 = tslib_1.__importDefault(require("path"));
 class Resource {
-    options;
     host;
+    staticDir;
     manifestFile;
     microPrePath;
-    staticDir;
+    assetsConfig;
+    htmlTemplate;
     cache = {};
-    isDevelopment = process.env.NODE_ENV === 'development';
-    constructor(options) {
-        this.options = options;
-        const { microPrePath = '', manifestFile = '', staticDir = '', proxyTarget = 'http://127.0.0.1:3000' } = this.options;
+    constructor({ microPrePath = '', manifestFile = '', staticDir = '', proxyTarget = 'http://127.0.0.1:3000' }) {
         this.host = proxyTarget;
         this.staticDir = staticDir;
         this.microPrePath = microPrePath;
@@ -28,17 +26,16 @@ class Resource {
         return this.host + `/${url}`.replace(/[/]+/g, '/');
     }
     generateHtmlTemplate() {
-        const rex = this.innerHeadFlag;
-        const indexPath = this.staticDir ? path_1.default.join(this.staticDir, 'index.html') : '';
-        let template = `${rex}${this.innerHtmlFlag}`;
-        if (indexPath && fs_1.default.existsSync(indexPath)) {
-            template = fs_1.default.readFileSync(indexPath, 'utf-8');
-            template.replace(rex, '').replace('</head>', `${rex}</head>`);
-        }
-        if (this.isDevelopment) {
-            const { js } = this.serializableAssets();
-            const hotResource = js.map((src) => `<script defer src="${src}"></script>`).join('');
-            template = template.replace(rex, `${hotResource}${rex}`);
+        let template = this.htmlTemplate;
+        if (!template) {
+            const rex = this.innerHeadFlag;
+            const indexPath = this.staticDir ? path_1.default.join(this.staticDir, 'index.html') : '';
+            template = `${rex}${this.innerHtmlFlag}`;
+            if (indexPath && fs_1.default.existsSync(indexPath)) {
+                template = fs_1.default.readFileSync(indexPath, 'utf-8');
+                template.replace(rex, '').replace('</head>', `${rex}</head>`);
+            }
+            this.htmlTemplate = template;
         }
         return template;
     }
@@ -53,27 +50,20 @@ class Resource {
         });
     }
     readAssetsSync() {
-        let assetsResult = '{}';
-        if (this.manifestFile && fs_1.default.existsSync(this.manifestFile)) {
+        let assetsResult = this.assetsConfig;
+        if (!assetsResult && this.manifestFile && fs_1.default.existsSync(this.manifestFile)) {
             assetsResult = fs_1.default.readFileSync(this.manifestFile, 'utf-8');
         }
-        return JSON.parse(assetsResult);
-    }
-    serializableAssets() {
-        const entrypoints = this.readAssetsSync();
-        const staticAssets = { js: [], links: [], linksToStyle: [] };
-        Object.keys(entrypoints).forEach((key) => {
-            const { js = [], css = [] } = entrypoints[key];
-            staticAssets.js.push(...js);
-            staticAssets.links.push(...css);
-        });
-        return staticAssets;
+        return JSON.parse(assetsResult || '{}');
     }
     readStaticFile(url) {
-        const filePath = this.staticDir ? path_1.default.join(this.staticDir, url) : '';
-        const source = filePath && fs_1.default.existsSync(filePath) ? fs_1.default.readFileSync(filePath, 'utf-8') : '{}';
-        const fileCache = { type: 'file-static', source: JSON.parse(source) };
-        this.cache[url] = fileCache;
+        let fileCache = this.cache[url];
+        if (!fileCache) {
+            const filePath = this.staticDir ? path_1.default.join(this.staticDir, url) : '';
+            const source = filePath && fs_1.default.existsSync(filePath) ? fs_1.default.readFileSync(filePath, 'utf-8') : '{}';
+            fileCache = { type: 'file-static', source: JSON.parse(source) };
+            this.cache[url] = fileCache;
+        }
         return fileCache;
     }
     get innerHeadFlag() {
