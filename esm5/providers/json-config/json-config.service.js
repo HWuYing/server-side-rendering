@@ -1,12 +1,17 @@
-import { __decorate } from "tslib";
+import { __decorate, __extends } from "tslib";
 import { Injectable } from '@fm/di';
 import { JsonConfigService as ShareJsonConfigService } from '@fm/shared/providers/json-config';
-let JsonConfigService = class JsonConfigService extends ShareJsonConfigService {
-    getServerFetchData(url) {
-        return this.appContext.readStaticFile(url);
+var JsonConfigService = /** @class */ (function (_super) {
+    __extends(JsonConfigService, _super);
+    function JsonConfigService() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
-};
-JsonConfigService = __decorate([
-    Injectable()
-], JsonConfigService);
+    JsonConfigService.prototype.getServerFetchData = function (url) {
+        return this.appContext.readStaticFile(url);
+    };
+    JsonConfigService = __decorate([
+        Injectable()
+    ], JsonConfigService);
+    return JsonConfigService;
+}(ShareJsonConfigService));
 export { JsonConfigService };

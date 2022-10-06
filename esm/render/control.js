@@ -1,17 +1,20 @@
-import { __decorate, __metadata } from "tslib";
+import { __awaiter, __decorate, __metadata } from "tslib";
 import { Get } from "@fm/server/decorator/injectable-router";
 import { Render } from "./render";
 export class SSRControl {
-    ssrVm;
     constructor(entryFile, options) {
         this.ssrVm = new Render(entryFile, options);
     }
-    async renderMicro(request, response) {
-        request.params.pathname = request.path.replace(/\/micro-ssr/g, '');
-        response.json(await this.ssrVm.renderMicro(request));
+    renderMicro(request, response) {
+        return __awaiter(this, void 0, void 0, function* () {
+            request.params.pathname = request.path.replace(/\/micro-ssr/g, '');
+            response.json(yield this.ssrVm.renderMicro(request));
+        });
     }
-    async render(request, response) {
-        response.end(await this.ssrVm.render(request));
+    render(request, response) {
+        return __awaiter(this, void 0, void 0, function* () {
+            response.end(yield this.ssrVm.render(request));
+        });
     }
 }
 __decorate([

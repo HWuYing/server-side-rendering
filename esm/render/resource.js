@@ -1,15 +1,10 @@
+import { __awaiter } from "tslib";
 import fs from 'fs';
 import fetch from 'node-fetch';
 import path from 'path';
 export class Resource {
-    host;
-    staticDir;
-    manifestFile;
-    microPrePath;
-    assetsConfig;
-    htmlTemplate;
-    cache = {};
     constructor({ microPrePath = '', manifestFile = '', staticDir = '', proxyTarget = 'http://127.0.0.1:3000' }) {
+        this.cache = {};
         this.host = proxyTarget;
         this.staticDir = staticDir;
         this.microPrePath = microPrePath;
@@ -35,14 +30,16 @@ export class Resource {
         }
         return template;
     }
-    async proxyFetch(url, init) {
-        const _url = /http|https/.test(url) ? url : `${this.host}/${url.replace(/^[/]+/, '')}`;
-        return fetch(_url, init).then((res) => {
-            const { status, statusText } = res;
-            if (![404, 504].includes(status)) {
-                return res;
-            }
-            throw new Error(`${status}: ${statusText}`);
+    proxyFetch(url, init) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const _url = /http|https/.test(url) ? url : `${this.host}/${url.replace(/^[/]+/, '')}`;
+            return fetch(_url, init).then((res) => {
+                const { status, statusText } = res;
+                if (![404, 504].includes(status)) {
+                    return res;
+                }
+                throw new Error(`${status}: ${statusText}`);
+            });
         });
     }
     readAssetsSync() {

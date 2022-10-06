@@ -9,15 +9,11 @@ import { forkJoin, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
 import { RESOURCE } from '../../token';
 let MicroManage = class MicroManage {
-    http;
-    injector;
-    resource;
-    microCache = new Map();
-    microStaticCache = new Map();
-    appContext;
     constructor(http, injector) {
         this.http = http;
         this.injector = injector;
+        this.microCache = new Map();
+        this.microStaticCache = new Map();
         this.appContext = this.injector.get(AppContextService);
         this.resource = this.injector.get(RESOURCE);
     }
@@ -37,7 +33,7 @@ let MicroManage = class MicroManage {
         if (isEmpty(links)) {
             return of(microResult);
         }
-        return forkJoin(links.map((href) => this.getLinkCache(href))).pipe(map((styles) => ({ ...microResult, linkToStyles: styles })));
+        return forkJoin(links.map((href) => this.getLinkCache(href))).pipe(map((styles) => (Object.assign(Object.assign({}, microResult), { linkToStyles: styles }))));
     }
     getLinkCache(href) {
         const linkUrl = this.resource.generateMicroStaticpath(href);
@@ -57,7 +53,7 @@ let MicroManage = class MicroManage {
             script.parentNode.removeChild(script)
           })();
         </script>`, { template }));
-        return { ...microResult, html: '', links: [], styles: '', microTags };
+        return Object.assign(Object.assign({}, microResult), { html: '', links: [], styles: '', microTags });
     }
 };
 MicroManage = __decorate([

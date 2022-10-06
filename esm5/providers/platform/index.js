@@ -1,2 +1,5 @@
 import { Platform } from './platform';
-export const dynamicPlatform = (providers = []) => new Platform(providers);
+export var dynamicPlatform = function (providers) {
+    if (providers === void 0) { providers = []; }
+    return new Platform(providers);
+};

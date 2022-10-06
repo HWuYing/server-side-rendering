@@ -1,3 +1,4 @@
+import { __awaiter, __rest } from "tslib";
 import { getProvider, Injector, StaticInjector } from '@fm/di';
 import { serializableAssets } from '@fm/shared/micro';
 import { APP_CONTEXT, AppContextService } from '@fm/shared/providers/app-context';
@@ -10,8 +11,6 @@ import { RESOURCE } from '../../token';
 import { AppContextService as ServerAppContextService } from '../app-context';
 import { JsonConfigService as ServerJsonConfigService } from '../json-config';
 export class Platform {
-    providers;
-    rootInjector;
     constructor(providers = []) {
         this.providers = providers;
         this.rootInjector = getProvider(Injector);
@@ -19,22 +18,24 @@ export class Platform {
     bootstrapRender(render) {
         registryRender(this.proxyRender.bind(this, render));
     }
-    async proxyRender(render, global, isMicro = false) {
-        const { request, resource, ..._global } = global;
-        const microConfig = { isMicro, request, resource: resource.cache, fetch: resource.proxyFetch, renderSSR: true };
-        const injector = this.beforeBootstrapRender(microConfig, [
-            { provide: RESOURCE, useValue: resource },
-            { provide: HISTORY, useValue: { location: this.getLocation(request, isMicro), listen: () => () => void (0) } }
-        ]);
-        const { js = [], links = [] } = serializableAssets(resource.readAssetsSync());
-        const { html, styles } = await render(injector, { request, ..._global });
-        const execlResult = await this.execlMicroMiddleware(injector, { html, styles, js, links, microTags: [], microFetchData: [] });
-        injector.clear();
-        return execlResult;
+    proxyRender(render, global, isMicro = false) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { request, resource } = global, _global = __rest(global, ["request", "resource"]);
+            const microConfig = { isMicro, request, resource: resource.cache, fetch: resource.proxyFetch, renderSSR: true };
+            const injector = this.beforeBootstrapRender(microConfig, [
+                { provide: RESOURCE, useValue: resource },
+                { provide: HISTORY, useValue: { location: this.getLocation(request, isMicro), listen: () => () => void (0) } }
+            ]);
+            const { js = [], links = [] } = serializableAssets(resource.readAssetsSync());
+            const { html, styles } = yield render(injector, Object.assign({ request }, _global));
+            const execlResult = yield this.execlMicroMiddleware(injector, { html, styles, js, links, microTags: [], microFetchData: [] });
+            injector.clear();
+            return execlResult;
+        });
     }
     beforeBootstrapRender(context, providers = []) {
         const injector = new StaticInjector(this.rootInjector, { isScope: 'self' });
-        const appContext = { useMicroManage: () => injector.get(MicroManage), ...context };
+        const appContext = Object.assign({ useMicroManage: () => injector.get(MicroManage) }, context);
         const _providers = [
             ...this.providers,
             { provide: APP_CONTEXT, useValue: appContext },
@@ -55,10 +56,12 @@ export class Platform {
             microFetchData: microFetchData.concat(...microResult.microFetchData || [])
         })));
     }
-    async execlMicroMiddleware(injector, options) {
-        const appContext = injector.get(AppContextService);
-        const fetchData = appContext.getAllFileSource();
-        return lastValueFrom(appContext.getpageMicroMiddleware().reduce((input, middleware) => (input.pipe(switchMap(this.mergeMicroToSSR(middleware)))), of(options))).then((execlResult) => ({ ...execlResult, fetchData }));
+    execlMicroMiddleware(injector, options) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const appContext = injector.get(AppContextService);
+            const fetchData = appContext.getAllFileSource();
+            return lastValueFrom(appContext.getpageMicroMiddleware().reduce((input, middleware) => (input.pipe(switchMap(this.mergeMicroToSSR(middleware)))), of(options))).then((execlResult) => (Object.assign(Object.assign({}, execlResult), { fetchData })));
+        });
     }
     getLocation(request, isMicro) {
         const { pathname = '' } = request.params;

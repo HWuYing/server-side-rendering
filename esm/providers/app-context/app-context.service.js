@@ -4,11 +4,10 @@ import { AppContextService as SharedAppContextService } from '@fm/shared/provide
 import { RESOURCE } from '@fm/ssr/token';
 import { of } from 'rxjs';
 let AppContextService = class AppContextService extends SharedAppContextService {
-    resource;
-    pageFileSource = {};
-    microMiddlewareList = [];
     constructor(injector) {
         super(injector);
+        this.pageFileSource = {};
+        this.microMiddlewareList = [];
         this.resource = this.injector.get(RESOURCE);
     }
     readStaticFile(url) {
