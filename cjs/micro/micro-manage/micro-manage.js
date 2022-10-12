@@ -3,26 +3,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MicroManage = void 0;
 var tslib_1 = require("tslib");
 var di_1 = require("@fm/di");
-var micro_1 = require("@fm/shared/micro");
-var app_context_1 = require("@fm/shared/providers/app-context");
-var token_1 = require("@fm/shared/token");
+var shared_1 = require("@fm/shared");
 var lodash_1 = require("lodash");
 var rxjs_1 = require("rxjs");
 var operators_1 = require("rxjs/operators");
-var token_2 = require("../../token");
+var token_1 = require("../../token");
 var MicroManage = /** @class */ (function () {
     function MicroManage(injector) {
         this.injector = injector;
         this.microCache = new Map();
         this.microStaticCache = new Map();
-        this.appContext = this.injector.get(app_context_1.AppContextService);
-        this.resource = this.injector.get(token_2.RESOURCE);
+        this.appContext = this.injector.get(shared_1.AppContextService);
+        this.resource = this.injector.get(token_1.RESOURCE);
     }
     MicroManage.prototype.bootstrapMicro = function (microName) {
         var _this = this;
         var subject = this.microCache.get(microName);
         if (!subject) {
-            var pathname = this.injector.get(token_1.HISTORY).location.pathname;
+            var pathname = this.injector.get(shared_1.HISTORY).location.pathname;
             subject = this.fetchRequire(this.resource.generateMicroPath(microName, pathname)).pipe((0, operators_1.catchError)(function (error) { return (0, rxjs_1.of)({ html: "".concat(microName, "<br/>").concat(error.message), styles: '' }); }), (0, operators_1.switchMap)(function (microResult) { return _this.reeadLinkToStyles(microName, microResult); }), (0, operators_1.map)(function (microResult) { return ({ microResult: _this.createMicroTag(microName, microResult), microName: microName }); }), (0, operators_1.shareReplay)(1));
             subject.subscribe({ next: function () { return void (0); }, error: function () { return void (0); } });
             this.appContext.registryMicroMidder(function () { return subject; });
@@ -49,8 +47,8 @@ var MicroManage = /** @class */ (function () {
     };
     MicroManage.prototype.createMicroTag = function (microName, microResult) {
         var html = microResult.html, styles = microResult.styles, linkToStyles = microResult.linkToStyles, _a = microResult.microTags, microTags = _a === void 0 ? [] : _a;
-        var template = (0, micro_1.createMicroElementTemplate)(microName, { initHtml: html, initStyle: styles, linkToStyles: linkToStyles });
-        microTags.push((0, micro_1.templateZip)("<script id=\"create-".concat(microName, "-tag\">{template}\n          (function() {\n            const script = document.getElementById('create-").concat(microName, "-tag');\n            script.parentNode.removeChild(script)\n          })();\n        </script>"), { template: template }));
+        var template = (0, shared_1.createMicroElementTemplate)(microName, { initHtml: html, initStyle: styles, linkToStyles: linkToStyles });
+        microTags.push((0, shared_1.templateZip)("<script id=\"create-".concat(microName, "-tag\">{template}\n          (function() {\n            const script = document.getElementById('create-").concat(microName, "-tag');\n            script.parentNode.removeChild(script)\n          })();\n        </script>"), { template: template }));
         return tslib_1.__assign(tslib_1.__assign({}, microResult), { html: '', links: [], styles: '', microTags: microTags });
     };
     MicroManage.prototype.fetchRequire = function (url, isText) {

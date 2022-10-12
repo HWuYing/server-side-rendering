@@ -1,2 +1,3 @@
-export * from './json-config';
-export * from './platform';
+export { JsonConfigService } from './json-config';
+export { dynamicPlatform } from './platform';
+export { AppContextService } from './app-context';

@@ -1,6 +1,6 @@
 import { __decorate } from "tslib";
 import { Injectable } from '@fm/di';
-import { JsonConfigService as ShareJsonConfigService } from '@fm/shared/providers/json-config';
+import { JsonConfigService as ShareJsonConfigService } from '@fm/shared';
 import { AppContextService } from '../app-context';
 let JsonConfigService = class JsonConfigService extends ShareJsonConfigService {
     getJsonConfig(url) {

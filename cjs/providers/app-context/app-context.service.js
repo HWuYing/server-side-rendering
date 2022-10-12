@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppContextService = void 0;
 var tslib_1 = require("tslib");
 var di_1 = require("@fm/di");
-var app_context_1 = require("@fm/shared/providers/app-context");
+var shared_1 = require("@fm/shared");
 var token_1 = require("@fm/ssr/token");
 var rxjs_1 = require("rxjs");
 var AppContextService = /** @class */ (function (_super) {
@@ -67,5 +67,5 @@ var AppContextService = /** @class */ (function (_super) {
         tslib_1.__metadata("design:paramtypes", [di_1.Injector])
     ], AppContextService);
     return AppContextService;
-}(app_context_1.AppContextService));
+}(shared_1.AppContextService));
 exports.AppContextService = AppContextService;

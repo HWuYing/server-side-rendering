@@ -1,1 +1,1 @@
-export * from './micro-manage/micro-manage';
+export { MicroManage } from './micro-manage/micro-manage';

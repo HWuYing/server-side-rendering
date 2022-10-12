@@ -1,5 +1,5 @@
 import { __awaiter, __decorate, __generator, __metadata } from "tslib";
-import { Get } from "@fm/server/decorator/injectable-router";
+import { Get } from "@fm/server";
 import { Render } from "./render";
 var SSRControl = /** @class */ (function () {
     function SSRControl(entryFile, options) {

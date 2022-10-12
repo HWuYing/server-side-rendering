@@ -1,2 +1,3 @@
-export * from './control';
-export * from './resource';
+export { SSRControl } from './control';
+export { Resource } from './resource';
+export * from './type-api';

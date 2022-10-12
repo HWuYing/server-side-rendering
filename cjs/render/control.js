@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SSRControl = void 0;
 var tslib_1 = require("tslib");
-var injectable_router_1 = require("@fm/server/decorator/injectable-router");
+var server_1 = require("@fm/server");
 var render_1 = require("./render");
 var SSRControl = /** @class */ (function () {
     function SSRControl(entryFile, options) {
@@ -40,14 +40,14 @@ var SSRControl = /** @class */ (function () {
         });
     };
     tslib_1.__decorate([
-        (0, injectable_router_1.Get)('/micro-ssr'),
-        (0, injectable_router_1.Get)('/micro-ssr/*'),
+        (0, server_1.Get)('/micro-ssr'),
+        (0, server_1.Get)('/micro-ssr/*'),
         tslib_1.__metadata("design:type", Function),
         tslib_1.__metadata("design:paramtypes", [Object, Object]),
         tslib_1.__metadata("design:returntype", Promise)
     ], SSRControl.prototype, "renderMicro", null);
     tslib_1.__decorate([
-        (0, injectable_router_1.Get)('*'),
+        (0, server_1.Get)('*'),
         tslib_1.__metadata("design:type", Function),
         tslib_1.__metadata("design:paramtypes", [Object, Object]),
         tslib_1.__metadata("design:returntype", Promise)

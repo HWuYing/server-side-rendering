@@ -1,9 +1,7 @@
 import { __assign, __awaiter, __generator, __rest, __spreadArray } from "tslib";
 import { getProvider, Injector, StaticInjector } from '@fm/di';
 import { serializableAssets } from '@fm/shared/micro';
-import { APP_CONTEXT, AppContextService } from '@fm/shared/providers/app-context';
-import { JsonConfigService } from '@fm/shared/providers/json-config';
-import { HISTORY } from '@fm/shared/token';
+import { APP_CONTEXT, HISTORY, JsonConfigService, AppContextService } from '@fm/shared';
 import { lastValueFrom, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { MicroManage } from '../../micro';

@@ -1,4 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var tslib_1 = require("tslib");
-tslib_1.__exportStar(require("./app-context.service"), exports);
+exports.AppContextService = void 0;
+var app_context_service_1 = require("./app-context.service");
+Object.defineProperty(exports, "AppContextService", { enumerable: true, get: function () { return app_context_service_1.AppContextService; } });

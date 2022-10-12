@@ -1,6 +1,6 @@
 import { __awaiter, __decorate, __metadata, __param } from "tslib";
 import { Inject, Injectable, Injector } from '@fm/di';
-import { AppContextService as SharedAppContextService } from '@fm/shared/providers/app-context';
+import { AppContextService as SharedAppContextService } from '@fm/shared';
 import { RESOURCE } from '@fm/ssr/token';
 import { of } from 'rxjs';
 let AppContextService = class AppContextService extends SharedAppContextService {

@@ -1,1 +1,1 @@
-export * from './app-context.service';
+export { AppContextService } from './app-context.service';
