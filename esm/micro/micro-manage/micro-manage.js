@@ -1,16 +1,14 @@
 import { __decorate, __metadata } from "tslib";
 import { Injectable, Injector } from '@fm/di';
-import { HttpClient } from '@fm/shared/common/http';
 import { createMicroElementTemplate, templateZip } from '@fm/shared/micro';
 import { AppContextService } from '@fm/shared/providers/app-context';
 import { HISTORY } from '@fm/shared/token';
 import { cloneDeep, isEmpty } from 'lodash';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin, from, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
 import { RESOURCE } from '../../token';
 let MicroManage = class MicroManage {
-    constructor(http, injector) {
-        this.http = http;
+    constructor(injector) {
         this.injector = injector;
         this.microCache = new Map();
         this.microStaticCache = new Map();
@@ -21,7 +19,7 @@ let MicroManage = class MicroManage {
         let subject = this.microCache.get(microName);
         if (!subject) {
             const { location: { pathname } } = this.injector.get(HISTORY);
-            subject = this.http.get(this.resource.generateMicroPath(microName, pathname)).pipe(catchError((error) => of({ html: `${microName}<br/>${error.message}`, styles: '' })), switchMap((microResult) => this.reeadLinkToStyles(microName, microResult)), map((microResult) => ({ microResult: this.createMicroTag(microName, microResult), microName })), shareReplay(1));
+            subject = this.fetchRequire(this.resource.generateMicroPath(microName, pathname)).pipe(catchError((error) => of({ html: `${microName}<br/>${error.message}`, styles: '' })), switchMap((microResult) => this.reeadLinkToStyles(microName, microResult)), map((microResult) => ({ microResult: this.createMicroTag(microName, microResult), microName })), shareReplay(1));
             subject.subscribe({ next: () => void (0), error: () => void (0) });
             this.appContext.registryMicroMidder(() => subject);
             this.microCache.set(microName, subject);
@@ -39,7 +37,7 @@ let MicroManage = class MicroManage {
         const linkUrl = this.resource.generateMicroStaticpath(href);
         let linkSubject = this.microStaticCache.get(linkUrl);
         if (!linkSubject) {
-            linkSubject = this.http.getText(linkUrl).pipe(shareReplay(1), map(cloneDeep));
+            linkSubject = this.fetchRequire(linkUrl, true).pipe(shareReplay(1), map(cloneDeep));
             this.microStaticCache.set(linkUrl, linkSubject);
         }
         return linkSubject;
@@ -55,9 +53,12 @@ let MicroManage = class MicroManage {
         </script>`, { template }));
         return Object.assign(Object.assign({}, microResult), { html: '', links: [], styles: '', microTags });
     }
+    fetchRequire(url, isText) {
+        return from(this.resource.proxyFetch(url, { method: 'get' }).then((res) => !isText ? res.json() : res.text()));
+    }
 };
 MicroManage = __decorate([
     Injectable(),
-    __metadata("design:paramtypes", [HttpClient, Injector])
+    __metadata("design:paramtypes", [Injector])
 ], MicroManage);
 export { MicroManage };

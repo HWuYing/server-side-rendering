@@ -11,10 +11,10 @@ export class Resource {
         this.manifestFile = manifestFile;
     }
     generateMicroPath(microName, pathname) {
-        return this.host + `/${this.microPrePath}/${microName}/micro-ssr/${pathname}`.replace(/[/]+/g, '/');
+        return `/${this.microPrePath}/${microName}/micro-ssr/${pathname}`.replace(/[/]+/g, '/');
     }
     generateMicroStaticpath(url) {
-        return this.host + `/${url}`.replace(/[/]+/g, '/');
+        return `/${url}`.replace(/[/]+/g, '/');
     }
     generateHtmlTemplate() {
         let template = this.htmlTemplate;
@@ -33,13 +33,12 @@ export class Resource {
     proxyFetch(url, init) {
         return __awaiter(this, void 0, void 0, function* () {
             const _url = /http|https/.test(url) ? url : `${this.host}/${url.replace(/^[/]+/, '')}`;
-            return fetch(_url, init).then((res) => {
-                const { status, statusText } = res;
-                if (![404, 504].includes(status)) {
-                    return res;
-                }
-                throw new Error(`${status}: ${statusText}`);
-            });
+            const res = yield fetch(_url, init);
+            const { status, statusText } = res;
+            if (![404, 504].includes(status)) {
+                return res;
+            }
+            throw new Error(`${status}: ${statusText}`);
         });
     }
     readAssetsSync() {

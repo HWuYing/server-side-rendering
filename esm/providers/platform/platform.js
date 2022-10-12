@@ -21,7 +21,7 @@ export class Platform {
     proxyRender(render, global, isMicro = false) {
         return __awaiter(this, void 0, void 0, function* () {
             const { request, resource } = global, _global = __rest(global, ["request", "resource"]);
-            const microConfig = { isMicro, request, resource: resource.cache, fetch: resource.proxyFetch, renderSSR: true };
+            const microConfig = { isMicro, request, resource: resource.cache, renderSSR: true };
             const injector = this.beforeBootstrapRender(microConfig, [
                 { provide: RESOURCE, useValue: resource },
                 { provide: HISTORY, useValue: { location: this.getLocation(request, isMicro), listen: () => () => void (0) } }
@@ -29,6 +29,7 @@ export class Platform {
             const { js = [], links = [] } = serializableAssets(resource.readAssetsSync());
             const { html, styles } = yield render(injector, Object.assign({ request }, _global));
             const execlResult = yield this.execlMicroMiddleware(injector, { html, styles, js, links, microTags: [], microFetchData: [] });
+            execlResult.fetchData = injector.get(AppContextService).getPageFileSource();
             injector.clear();
             return execlResult;
         });
@@ -59,8 +60,7 @@ export class Platform {
     execlMicroMiddleware(injector, options) {
         return __awaiter(this, void 0, void 0, function* () {
             const appContext = injector.get(AppContextService);
-            const fetchData = appContext.getAllFileSource();
-            return lastValueFrom(appContext.getpageMicroMiddleware().reduce((input, middleware) => (input.pipe(switchMap(this.mergeMicroToSSR(middleware)))), of(options))).then((execlResult) => (Object.assign(Object.assign({}, execlResult), { fetchData })));
+            return lastValueFrom(appContext.getpageMicroMiddleware().reduce((input, middleware) => (input.pipe(switchMap(this.mergeMicroToSSR(middleware)))), of(options)));
         });
     }
     getLocation(request, isMicro) {

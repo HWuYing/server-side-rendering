@@ -12,10 +12,10 @@ var Resource = /** @class */ (function () {
         this.manifestFile = manifestFile;
     }
     Resource.prototype.generateMicroPath = function (microName, pathname) {
-        return this.host + "/".concat(this.microPrePath, "/").concat(microName, "/micro-ssr/").concat(pathname).replace(/[/]+/g, '/');
+        return "/".concat(this.microPrePath, "/").concat(microName, "/micro-ssr/").concat(pathname).replace(/[/]+/g, '/');
     };
     Resource.prototype.generateMicroStaticpath = function (url) {
-        return this.host + "/".concat(url).replace(/[/]+/g, '/');
+        return "/".concat(url).replace(/[/]+/g, '/');
     };
     Resource.prototype.generateHtmlTemplate = function () {
         var template = this.htmlTemplate;
@@ -33,16 +33,20 @@ var Resource = /** @class */ (function () {
     };
     Resource.prototype.proxyFetch = function (url, init) {
         return __awaiter(this, void 0, void 0, function () {
-            var _url;
+            var _url, res, status, statusText;
             return __generator(this, function (_a) {
-                _url = /http|https/.test(url) ? url : "".concat(this.host, "/").concat(url.replace(/^[/]+/, ''));
-                return [2 /*return*/, fetch(_url, init).then(function (res) {
-                        var status = res.status, statusText = res.statusText;
+                switch (_a.label) {
+                    case 0:
+                        _url = /http|https/.test(url) ? url : "".concat(this.host, "/").concat(url.replace(/^[/]+/, ''));
+                        return [4 /*yield*/, fetch(_url, init)];
+                    case 1:
+                        res = _a.sent();
+                        status = res.status, statusText = res.statusText;
                         if (![404, 504].includes(status)) {
-                            return res;
+                            return [2 /*return*/, res];
                         }
                         throw new Error("".concat(status, ": ").concat(statusText));
-                    })];
+                }
             });
         });
     };

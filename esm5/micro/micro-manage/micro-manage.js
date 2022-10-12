@@ -1,16 +1,14 @@
 import { __assign, __decorate, __metadata } from "tslib";
 import { Injectable, Injector } from '@fm/di';
-import { HttpClient } from '@fm/shared/common/http';
 import { createMicroElementTemplate, templateZip } from '@fm/shared/micro';
 import { AppContextService } from '@fm/shared/providers/app-context';
 import { HISTORY } from '@fm/shared/token';
 import { cloneDeep, isEmpty } from 'lodash';
-import { forkJoin, of } from 'rxjs';
+import { forkJoin, from, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
 import { RESOURCE } from '../../token';
 var MicroManage = /** @class */ (function () {
-    function MicroManage(http, injector) {
-        this.http = http;
+    function MicroManage(injector) {
         this.injector = injector;
         this.microCache = new Map();
         this.microStaticCache = new Map();
@@ -22,7 +20,7 @@ var MicroManage = /** @class */ (function () {
         var subject = this.microCache.get(microName);
         if (!subject) {
             var pathname = this.injector.get(HISTORY).location.pathname;
-            subject = this.http.get(this.resource.generateMicroPath(microName, pathname)).pipe(catchError(function (error) { return of({ html: "".concat(microName, "<br/>").concat(error.message), styles: '' }); }), switchMap(function (microResult) { return _this.reeadLinkToStyles(microName, microResult); }), map(function (microResult) { return ({ microResult: _this.createMicroTag(microName, microResult), microName: microName }); }), shareReplay(1));
+            subject = this.fetchRequire(this.resource.generateMicroPath(microName, pathname)).pipe(catchError(function (error) { return of({ html: "".concat(microName, "<br/>").concat(error.message), styles: '' }); }), switchMap(function (microResult) { return _this.reeadLinkToStyles(microName, microResult); }), map(function (microResult) { return ({ microResult: _this.createMicroTag(microName, microResult), microName: microName }); }), shareReplay(1));
             subject.subscribe({ next: function () { return void (0); }, error: function () { return void (0); } });
             this.appContext.registryMicroMidder(function () { return subject; });
             this.microCache.set(microName, subject);
@@ -41,7 +39,7 @@ var MicroManage = /** @class */ (function () {
         var linkUrl = this.resource.generateMicroStaticpath(href);
         var linkSubject = this.microStaticCache.get(linkUrl);
         if (!linkSubject) {
-            linkSubject = this.http.getText(linkUrl).pipe(shareReplay(1), map(cloneDeep));
+            linkSubject = this.fetchRequire(linkUrl, true).pipe(shareReplay(1), map(cloneDeep));
             this.microStaticCache.set(linkUrl, linkSubject);
         }
         return linkSubject;
@@ -52,9 +50,12 @@ var MicroManage = /** @class */ (function () {
         microTags.push(templateZip("<script id=\"create-".concat(microName, "-tag\">{template}\n          (function() {\n            const script = document.getElementById('create-").concat(microName, "-tag');\n            script.parentNode.removeChild(script)\n          })();\n        </script>"), { template: template }));
         return __assign(__assign({}, microResult), { html: '', links: [], styles: '', microTags: microTags });
     };
+    MicroManage.prototype.fetchRequire = function (url, isText) {
+        return from(this.resource.proxyFetch(url, { method: 'get' }).then(function (res) { return !isText ? res.json() : res.text(); }));
+    };
     MicroManage = __decorate([
         Injectable(),
-        __metadata("design:paramtypes", [HttpClient, Injector])
+        __metadata("design:paramtypes", [Injector])
     ], MicroManage);
     return MicroManage;
 }());

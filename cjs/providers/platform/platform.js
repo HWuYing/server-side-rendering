@@ -30,7 +30,7 @@ var Platform = /** @class */ (function () {
                 switch (_e.label) {
                     case 0:
                         request = global.request, resource = global.resource, _global = tslib_1.__rest(global, ["request", "resource"]);
-                        microConfig = { isMicro: isMicro, request: request, resource: resource.cache, fetch: resource.proxyFetch, renderSSR: true };
+                        microConfig = { isMicro: isMicro, request: request, resource: resource.cache, renderSSR: true };
                         injector = this.beforeBootstrapRender(microConfig, [
                             { provide: token_2.RESOURCE, useValue: resource },
                             { provide: token_1.HISTORY, useValue: { location: this.getLocation(request, isMicro), listen: function () { return function () { return void (0); }; } } }
@@ -42,6 +42,7 @@ var Platform = /** @class */ (function () {
                         return [4 /*yield*/, this.execlMicroMiddleware(injector, { html: html, styles: styles, js: js, links: links, microTags: [], microFetchData: [] })];
                     case 2:
                         execlResult = _e.sent();
+                        execlResult.fetchData = injector.get(app_context_1.AppContextService).getPageFileSource();
                         injector.clear();
                         return [2 /*return*/, execlResult];
                 }
@@ -78,12 +79,11 @@ var Platform = /** @class */ (function () {
     };
     Platform.prototype.execlMicroMiddleware = function (injector, options) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var appContext, fetchData;
+            var appContext;
             var _this = this;
             return tslib_1.__generator(this, function (_a) {
                 appContext = injector.get(app_context_1.AppContextService);
-                fetchData = appContext.getAllFileSource();
-                return [2 /*return*/, (0, rxjs_1.lastValueFrom)(appContext.getpageMicroMiddleware().reduce(function (input, middleware) { return (input.pipe((0, operators_1.switchMap)(_this.mergeMicroToSSR(middleware)))); }, (0, rxjs_1.of)(options))).then(function (execlResult) { return (tslib_1.__assign(tslib_1.__assign({}, execlResult), { fetchData: fetchData })); })];
+                return [2 /*return*/, (0, rxjs_1.lastValueFrom)(appContext.getpageMicroMiddleware().reduce(function (input, middleware) { return (input.pipe((0, operators_1.switchMap)(_this.mergeMicroToSSR(middleware)))); }, (0, rxjs_1.of)(options)))];
             });
         });
     };

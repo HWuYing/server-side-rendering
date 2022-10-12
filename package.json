@@ -18,6 +18,12 @@
 			"es2015": "./esm/micro/index.js",
 			"default": "./esm5/micro/index.js"
 		},
+		"./micro/*": {
+			"node": "./cjs/micro/*.js",
+			"require": "./cjs/micro/*.js",
+			"es2015": "./esm/micro/*.js",
+			"default": "./esm5/micro/*.js"
+		},
 		"./micro/micro-manage/*": {
 			"node": "./cjs/micro/micro-manage/*.js",
 			"require": "./cjs/micro/micro-manage/*.js",
@@ -30,11 +36,23 @@
 			"es2015": "./esm/providers/index.js",
 			"default": "./esm5/providers/index.js"
 		},
+		"./providers/*": {
+			"node": "./cjs/providers/*.js",
+			"require": "./cjs/providers/*.js",
+			"es2015": "./esm/providers/*.js",
+			"default": "./esm5/providers/*.js"
+		},
 		"./providers/app-context": {
 			"node": "./cjs/providers/app-context/index.js",
 			"require": "./cjs/providers/app-context/index.js",
 			"es2015": "./esm/providers/app-context/index.js",
 			"default": "./esm5/providers/app-context/index.js"
+		},
+		"./providers/app-context/*": {
+			"node": "./cjs/providers/app-context/*.js",
+			"require": "./cjs/providers/app-context/*.js",
+			"es2015": "./esm/providers/app-context/*.js",
+			"default": "./esm5/providers/app-context/*.js"
 		},
 		"./providers/json-config": {
 			"node": "./cjs/providers/json-config/index.js",
@@ -42,11 +60,23 @@
 			"es2015": "./esm/providers/json-config/index.js",
 			"default": "./esm5/providers/json-config/index.js"
 		},
+		"./providers/json-config/*": {
+			"node": "./cjs/providers/json-config/*.js",
+			"require": "./cjs/providers/json-config/*.js",
+			"es2015": "./esm/providers/json-config/*.js",
+			"default": "./esm5/providers/json-config/*.js"
+		},
 		"./providers/platform": {
 			"node": "./cjs/providers/platform/index.js",
 			"require": "./cjs/providers/platform/index.js",
 			"es2015": "./esm/providers/platform/index.js",
 			"default": "./esm5/providers/platform/index.js"
+		},
+		"./providers/platform/*": {
+			"node": "./cjs/providers/platform/*.js",
+			"require": "./cjs/providers/platform/*.js",
+			"es2015": "./esm/providers/platform/*.js",
+			"default": "./esm5/providers/platform/*.js"
 		},
 		"./render": {
 			"node": "./cjs/render/index.js",
@@ -54,11 +84,23 @@
 			"es2015": "./esm/render/index.js",
 			"default": "./esm5/render/index.js"
 		},
+		"./render/*": {
+			"node": "./cjs/render/*.js",
+			"require": "./cjs/render/*.js",
+			"es2015": "./esm/render/*.js",
+			"default": "./esm5/render/*.js"
+		},
 		"./token": {
 			"node": "./cjs/token/index.js",
 			"require": "./cjs/token/index.js",
 			"es2015": "./esm/token/index.js",
 			"default": "./esm5/token/index.js"
+		},
+		"./token/*": {
+			"node": "./cjs/token/*.js",
+			"require": "./cjs/token/*.js",
+			"es2015": "./esm/token/*.js",
+			"default": "./esm5/token/*.js"
 		}
 	},
 	"dependencies": {},
