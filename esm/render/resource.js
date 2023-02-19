@@ -5,6 +5,7 @@ import path from 'path';
 export class Resource {
     constructor({ microPrePath = '', manifestFile = '', staticDir = '', proxyTarget = 'http://127.0.0.1:3000' }) {
         this.cache = {};
+        this.isDevelopment = process.env.NODE_ENV === 'development';
         this.host = proxyTarget;
         this.staticDir = staticDir;
         this.microPrePath = microPrePath;
@@ -50,7 +51,7 @@ export class Resource {
     }
     readStaticFile(url) {
         let fileCache = this.cache[url];
-        if (!fileCache) {
+        if (!fileCache || this.isDevelopment) {
             const filePath = this.staticDir ? path.join(this.staticDir, url) : '';
             const source = filePath && fs.existsSync(filePath) ? fs.readFileSync(filePath, 'utf-8') : '{}';
             fileCache = { type: 'file-static', source: JSON.parse(source) };

@@ -1,9 +1,9 @@
 import { __decorate, __metadata } from "tslib";
 import { Injectable, Injector } from '@fm/di';
-import { HISTORY, createMicroElementTemplate, AppContextService, templateZip } from '@fm/shared';
+import { AppContextService, createMicroElementTemplate, HISTORY, SharedHistory, templateZip } from '@fm/shared';
 import { cloneDeep, isEmpty } from 'lodash';
 import { forkJoin, from, of } from 'rxjs';
-import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
+import { catchError, map, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { RESOURCE } from '../../token';
 let MicroManage = class MicroManage {
     constructor(injector) {
@@ -14,15 +14,23 @@ let MicroManage = class MicroManage {
         this.resource = this.injector.get(RESOURCE);
     }
     bootstrapMicro(microName) {
-        let subject = this.microCache.get(microName);
+        const { location: { pathname } } = this.injector.get(HISTORY);
+        const cacheKey = `${microName}-${pathname}`;
+        let subject = this.microCache.get(cacheKey);
         if (!subject) {
-            const { location: { pathname } } = this.injector.get(HISTORY);
-            subject = this.fetchRequire(this.resource.generateMicroPath(microName, pathname)).pipe(catchError((error) => of({ html: `${microName}<br/>${error.message}`, styles: '' })), switchMap((microResult) => this.reeadLinkToStyles(microName, microResult)), map((microResult) => ({ microResult: this.createMicroTag(microName, microResult), microName })), shareReplay(1));
+            subject = this.fetchRequire(this.resource.generateMicroPath(microName, pathname)).pipe(catchError((error) => of({ html: `${microName}<br/>${error.message}`, styles: '', error })), tap((microResult) => this.checkRedirect(microResult)), switchMap((microResult) => this.reeadLinkToStyles(microName, microResult)), map((microResult) => ({ microResult: this.createMicroTag(microName, microResult), microName })), shareReplay(1));
             subject.subscribe({ next: () => void (0), error: () => void (0) });
             this.appContext.registryMicroMidder(() => subject);
-            this.microCache.set(microName, subject);
+            this.microCache.set(cacheKey, subject);
         }
         return of(null);
+    }
+    checkRedirect({ status, redirectUrl }) {
+        const isRedirect = status === '302';
+        if (isRedirect) {
+            this.injector.get(SharedHistory).redirect(redirectUrl);
+        }
+        return isRedirect;
     }
     reeadLinkToStyles(microName, microResult) {
         const { links = [] } = microResult;
@@ -41,8 +49,8 @@ let MicroManage = class MicroManage {
         return linkSubject;
     }
     createMicroTag(microName, microResult) {
-        const { html, styles, linkToStyles, microTags = [] } = microResult;
-        const template = createMicroElementTemplate(microName, { initHtml: html, initStyle: styles, linkToStyles });
+        const { html, styles, linkToStyles, microTags = [], error } = microResult;
+        const template = error ? '' : createMicroElementTemplate(microName, { initHtml: html, initStyle: styles, linkToStyles });
         microTags.push(templateZip(`<script id="create-${microName}-tag">{template}
           (function() {
             const script = document.getElementById('create-${microName}-tag');

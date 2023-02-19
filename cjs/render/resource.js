@@ -9,6 +9,7 @@ var Resource = /** @class */ (function () {
     function Resource(_a) {
         var _b = _a.microPrePath, microPrePath = _b === void 0 ? '' : _b, _c = _a.manifestFile, manifestFile = _c === void 0 ? '' : _c, _d = _a.staticDir, staticDir = _d === void 0 ? '' : _d, _e = _a.proxyTarget, proxyTarget = _e === void 0 ? 'http://127.0.0.1:3000' : _e;
         this.cache = {};
+        this.isDevelopment = process.env.NODE_ENV === 'development';
         this.host = proxyTarget;
         this.staticDir = staticDir;
         this.microPrePath = microPrePath;
@@ -62,7 +63,7 @@ var Resource = /** @class */ (function () {
     };
     Resource.prototype.readStaticFile = function (url) {
         var fileCache = this.cache[url];
-        if (!fileCache) {
+        if (!fileCache || this.isDevelopment) {
             var filePath = this.staticDir ? path_1.default.join(this.staticDir, url) : '';
             var source = filePath && fs_1.default.existsSync(filePath) ? fs_1.default.readFileSync(filePath, 'utf-8') : '{}';
             fileCache = { type: 'file-static', source: JSON.parse(source) };

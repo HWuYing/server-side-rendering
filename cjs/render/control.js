@@ -26,14 +26,13 @@ var SSRControl = /** @class */ (function () {
     };
     SSRControl.prototype.render = function (request, response) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var _a, _b;
-            return tslib_1.__generator(this, function (_c) {
-                switch (_c.label) {
-                    case 0:
-                        _b = (_a = response).end;
-                        return [4 /*yield*/, this.ssrVm.render(request)];
+            var _a, html, status, redirectUrl;
+            return tslib_1.__generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4 /*yield*/, this.ssrVm.render(request)];
                     case 1:
-                        _b.apply(_a, [_c.sent()]);
+                        _a = _b.sent(), html = _a.html, status = _a.status, redirectUrl = _a.redirectUrl;
+                        status === '302' ? response.redirect(redirectUrl) : response.end(html);
                         return [2 /*return*/];
                 }
             });

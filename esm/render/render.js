@@ -41,26 +41,28 @@ export class Render {
     }
     renderMicro(request) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { html, styles, links, fetchData, microTags, microFetchData = [] } = yield this._render(request, true);
+            const { status, redirectUrl, html, styles, links, microTags, microFetchData = [], fetchData } = yield this._render(request, true);
             microFetchData.push({ microName: this.microName, source: fetchData });
-            return { html, styles, links, microTags, microFetchData };
+            return { status, redirectUrl, html, styles, links, microTags, microFetchData };
         });
     }
     render(request) {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
-            const { js = [], links = [], html, styles, fetchData, microTags = [], microFetchData = [] } = yield this._render(request);
-            const _fetchData = this.createScriptTemplate('fetch-static', `var fetchCacheData = ${fetchData};`);
+            const result = yield this._render(request);
+            const { status, redirectUrl, js = [], links = [], styles, microTags = [], microFetchData = [] } = result;
+            const fetchData = this.createScriptTemplate('fetch-static', `var fetchCacheData = ${result.fetchData};`);
             const microData = this.createScriptTemplate('micro-fetch-static', `var microFetchData = ${JSON.stringify(microFetchData)};`);
             const chunkCss = this.isDevelopment ? links : ((_a = this.resource.readAssetsSync()['chunk']) === null || _a === void 0 ? void 0 : _a.css) || [];
             const chunkLinks = chunkCss.map((href) => `<link href="${href}" rel="stylesheet">`).join('');
-            let headContent = `${chunkLinks}${styles}${_fetchData}${microData}${microTags.join('')}`;
+            let headContent = `${chunkLinks}${styles}${fetchData}${microData}${microTags.join('')}`;
             if (this.isDevelopment) {
                 headContent += js.map((src) => `<script defer src="${src}"></script>`).join('');
             }
-            return this.resource.generateHtmlTemplate()
-                .replace(this.resource.innerHtmlFlag, html)
+            const html = this.resource.generateHtmlTemplate()
+                .replace(this.resource.innerHtmlFlag, result.html)
                 .replace(this.resource.innerHeadFlag, headContent);
+            return { html, status, redirectUrl };
         });
     }
 }

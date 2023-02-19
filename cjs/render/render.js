@@ -52,14 +52,14 @@ var Render = /** @class */ (function () {
     };
     Render.prototype.renderMicro = function (request) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var _a, html, styles, links, fetchData, microTags, _b, microFetchData;
+            var _a, status, redirectUrl, html, styles, links, microTags, _b, microFetchData, fetchData;
             return tslib_1.__generator(this, function (_c) {
                 switch (_c.label) {
                     case 0: return [4 /*yield*/, this._render(request, true)];
                     case 1:
-                        _a = _c.sent(), html = _a.html, styles = _a.styles, links = _a.links, fetchData = _a.fetchData, microTags = _a.microTags, _b = _a.microFetchData, microFetchData = _b === void 0 ? [] : _b;
+                        _a = _c.sent(), status = _a.status, redirectUrl = _a.redirectUrl, html = _a.html, styles = _a.styles, links = _a.links, microTags = _a.microTags, _b = _a.microFetchData, microFetchData = _b === void 0 ? [] : _b, fetchData = _a.fetchData;
                         microFetchData.push({ microName: this.microName, source: fetchData });
-                        return [2 /*return*/, { html: html, styles: styles, links: links, microTags: microTags, microFetchData: microFetchData }];
+                        return [2 /*return*/, { status: status, redirectUrl: redirectUrl, html: html, styles: styles, links: links, microTags: microTags, microFetchData: microFetchData }];
                 }
             });
         });
@@ -67,23 +67,25 @@ var Render = /** @class */ (function () {
     Render.prototype.render = function (request) {
         var _a;
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var _b, _c, js, _d, links, html, styles, fetchData, _e, microTags, _f, microFetchData, _fetchData, microData, chunkCss, chunkLinks, headContent;
-            return tslib_1.__generator(this, function (_g) {
-                switch (_g.label) {
+            var result, status, redirectUrl, _b, js, _c, links, styles, _d, microTags, _e, microFetchData, fetchData, microData, chunkCss, chunkLinks, headContent, html;
+            return tslib_1.__generator(this, function (_f) {
+                switch (_f.label) {
                     case 0: return [4 /*yield*/, this._render(request)];
                     case 1:
-                        _b = _g.sent(), _c = _b.js, js = _c === void 0 ? [] : _c, _d = _b.links, links = _d === void 0 ? [] : _d, html = _b.html, styles = _b.styles, fetchData = _b.fetchData, _e = _b.microTags, microTags = _e === void 0 ? [] : _e, _f = _b.microFetchData, microFetchData = _f === void 0 ? [] : _f;
-                        _fetchData = this.createScriptTemplate('fetch-static', "var fetchCacheData = ".concat(fetchData, ";"));
+                        result = _f.sent();
+                        status = result.status, redirectUrl = result.redirectUrl, _b = result.js, js = _b === void 0 ? [] : _b, _c = result.links, links = _c === void 0 ? [] : _c, styles = result.styles, _d = result.microTags, microTags = _d === void 0 ? [] : _d, _e = result.microFetchData, microFetchData = _e === void 0 ? [] : _e;
+                        fetchData = this.createScriptTemplate('fetch-static', "var fetchCacheData = ".concat(result.fetchData, ";"));
                         microData = this.createScriptTemplate('micro-fetch-static', "var microFetchData = ".concat(JSON.stringify(microFetchData), ";"));
                         chunkCss = this.isDevelopment ? links : ((_a = this.resource.readAssetsSync()['chunk']) === null || _a === void 0 ? void 0 : _a.css) || [];
                         chunkLinks = chunkCss.map(function (href) { return "<link href=\"".concat(href, "\" rel=\"stylesheet\">"); }).join('');
-                        headContent = "".concat(chunkLinks).concat(styles).concat(_fetchData).concat(microData).concat(microTags.join(''));
+                        headContent = "".concat(chunkLinks).concat(styles).concat(fetchData).concat(microData).concat(microTags.join(''));
                         if (this.isDevelopment) {
                             headContent += js.map(function (src) { return "<script defer src=\"".concat(src, "\"></script>"); }).join('');
                         }
-                        return [2 /*return*/, this.resource.generateHtmlTemplate()
-                                .replace(this.resource.innerHtmlFlag, html)
-                                .replace(this.resource.innerHeadFlag, headContent)];
+                        html = this.resource.generateHtmlTemplate()
+                            .replace(this.resource.innerHtmlFlag, result.html)
+                            .replace(this.resource.innerHeadFlag, headContent);
+                        return [2 /*return*/, { html: html, status: status, redirectUrl: redirectUrl }];
                 }
             });
         });

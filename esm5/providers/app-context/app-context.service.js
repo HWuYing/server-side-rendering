@@ -1,8 +1,7 @@
 import { __assign, __awaiter, __decorate, __extends, __generator, __metadata, __param } from "tslib";
 import { Inject, Injectable, Injector } from '@fm/di';
 import { AppContextService as SharedAppContextService } from '@fm/shared';
-import { RESOURCE } from '@fm/ssr/token';
-import { of } from 'rxjs';
+import { RESOURCE } from '../../token';
 var AppContextService = /** @class */ (function (_super) {
     __extends(AppContextService, _super);
     function AppContextService(injector) {
@@ -36,7 +35,7 @@ var AppContextService = /** @class */ (function (_super) {
     AppContextService.prototype.readStaticFile = function (url) {
         var fileCache = this.resource.readStaticFile(url);
         this.setPageSource(url, fileCache);
-        return of(fileCache.source);
+        return fileCache.source;
     };
     AppContextService.prototype.registryMicroMidder = function (middleware) {
         this.microMiddlewareList.push(middleware);

@@ -8,6 +8,7 @@ export declare class Resource implements ResourceInterface {
     private assetsConfig;
     private htmlTemplate;
     private cache;
+    private isDevelopment;
     constructor({ microPrePath, manifestFile, staticDir, proxyTarget }: ResourceOptions);
     generateMicroPath(microName: string, pathname: string): string;
     generateMicroStaticpath(url: string): string;

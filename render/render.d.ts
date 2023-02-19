@@ -12,11 +12,17 @@ export declare class Render {
     private _render;
     private createScriptTemplate;
     renderMicro(request: Request): Promise<{
+        status: any;
+        redirectUrl: any;
         html: any;
         styles: any;
         links: any;
         microTags: any;
         microFetchData: any;
     }>;
-    render(request: Request): Promise<string>;
+    render(request: Request): Promise<{
+        html: string;
+        status: any;
+        redirectUrl: any;
+    }>;
 }

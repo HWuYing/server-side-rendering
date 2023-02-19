@@ -1,6 +1,6 @@
 import { Injector } from '@fm/di';
-import { Fetch } from '@fm/shared/common/http/type-api';
 import { AppContextService as SharedAppContextService } from '@fm/shared';
+import { Fetch } from '@fm/shared/common/http';
 import { Observable } from 'rxjs';
 declare type MicroMiddleware = () => Observable<any>;
 export declare class AppContextService extends SharedAppContextService {
@@ -11,7 +11,7 @@ export declare class AppContextService extends SharedAppContextService {
     private setPageSource;
     private cacheToArray;
     private proxyFetch;
-    readStaticFile(url: string): Observable<any>;
+    readStaticFile(url: string): any;
     registryMicroMidder(middleware: MicroMiddleware): void;
     getPageFileSource(): string;
     getAllFileSource(): string;

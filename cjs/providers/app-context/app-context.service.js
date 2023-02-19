@@ -4,8 +4,7 @@ exports.AppContextService = void 0;
 var tslib_1 = require("tslib");
 var di_1 = require("@fm/di");
 var shared_1 = require("@fm/shared");
-var token_1 = require("@fm/ssr/token");
-var rxjs_1 = require("rxjs");
+var token_1 = require("../../token");
 var AppContextService = /** @class */ (function (_super) {
     tslib_1.__extends(AppContextService, _super);
     function AppContextService(injector) {
@@ -39,7 +38,7 @@ var AppContextService = /** @class */ (function (_super) {
     AppContextService.prototype.readStaticFile = function (url) {
         var fileCache = this.resource.readStaticFile(url);
         this.setPageSource(url, fileCache);
-        return (0, rxjs_1.of)(fileCache.source);
+        return fileCache.source;
     };
     AppContextService.prototype.registryMicroMidder = function (middleware) {
         this.microMiddlewareList.push(middleware);

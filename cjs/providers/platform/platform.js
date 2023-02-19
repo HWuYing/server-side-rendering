@@ -3,8 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Platform = void 0;
 var tslib_1 = require("tslib");
 var di_1 = require("@fm/di");
-var micro_1 = require("@fm/shared/micro");
 var shared_1 = require("@fm/shared");
+var micro_1 = require("@fm/shared/micro");
 var rxjs_1 = require("rxjs");
 var operators_1 = require("rxjs/operators");
 var micro_2 = require("../../micro");
@@ -12,27 +12,27 @@ var token_1 = require("../../token");
 var app_context_1 = require("../app-context");
 var json_config_1 = require("../json-config");
 var Platform = /** @class */ (function () {
-    function Platform(providers) {
-        if (providers === void 0) { providers = []; }
-        this.providers = providers;
-        this.rootInjector = (0, di_1.getProvider)(di_1.Injector);
+    function Platform(platformInjector) {
+        this.platformInjector = platformInjector;
     }
-    Platform.prototype.bootstrapRender = function (render) {
-        registryRender(this.proxyRender.bind(this, render));
+    Platform.prototype.bootstrapRender = function (additionalProviders, render) {
+        var _a = this.parseParams(additionalProviders, render), providers = _a[0], _render = _a[1];
+        registryRender(this.proxyRender.bind(this, providers, _render));
     };
-    Platform.prototype.proxyRender = function (render, global, isMicro) {
+    Platform.prototype.proxyRender = function (providers, render, global, isMicro) {
         if (isMicro === void 0) { isMicro = false; }
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var request, resource, _global, microConfig, injector, _a, _b, js, _c, links, _d, html, styles, execlResult;
+            var request, resource, _global, microConfig, injector, history, _a, _b, js, _c, links, _d, html, styles, execlResult;
             return tslib_1.__generator(this, function (_e) {
                 switch (_e.label) {
                     case 0:
                         request = global.request, resource = global.resource, _global = tslib_1.__rest(global, ["request", "resource"]);
-                        microConfig = { isMicro: isMicro, request: request, resource: resource.cache, renderSSR: true };
-                        injector = this.beforeBootstrapRender(microConfig, [
+                        microConfig = { isMicro: isMicro, request: request, resource: resource.cache, renderSSR: true, location: this.getLocation(request, isMicro) };
+                        injector = this.beforeBootstrapRender(microConfig, tslib_1.__spreadArray(tslib_1.__spreadArray([], providers, true), [
                             { provide: token_1.RESOURCE, useValue: resource },
-                            { provide: shared_1.HISTORY, useValue: { location: this.getLocation(request, isMicro), listen: function () { return function () { return void (0); }; } } }
-                        ]);
+                            { provide: shared_1.HISTORY, useClass: shared_1.MockHistory }
+                        ], false));
+                        history = injector.get(shared_1.HISTORY);
                         _a = (0, micro_1.serializableAssets)(resource.readAssetsSync()), _b = _a.js, js = _b === void 0 ? [] : _b, _c = _a.links, links = _c === void 0 ? [] : _c;
                         return [4 /*yield*/, render(injector, tslib_1.__assign({ request: request }, _global))];
                     case 1:
@@ -41,22 +41,21 @@ var Platform = /** @class */ (function () {
                     case 2:
                         execlResult = _e.sent();
                         execlResult.fetchData = injector.get(shared_1.AppContextService).getPageFileSource();
-                        injector.clear();
-                        return [2 /*return*/, execlResult];
+                        injector.destory();
+                        return [2 /*return*/, history.redirect ? { status: '302', redirectUrl: history.redirect.url } : execlResult];
                 }
             });
         });
     };
     Platform.prototype.beforeBootstrapRender = function (context, providers) {
         if (providers === void 0) { providers = []; }
-        var injector = new di_1.StaticInjector(this.rootInjector, { isScope: 'self' });
-        var appContext = tslib_1.__assign({ useMicroManage: function () { return injector.get(micro_2.MicroManage); } }, context);
-        var _providers = tslib_1.__spreadArray(tslib_1.__spreadArray(tslib_1.__spreadArray([], this.providers, true), [
-            { provide: shared_1.APP_CONTEXT, useValue: appContext },
-            { provide: shared_1.JsonConfigService, useClass: json_config_1.JsonConfigService },
-            { provide: shared_1.AppContextService, useClass: app_context_1.AppContextService }
-        ], false), providers, true);
-        _providers.forEach(function (provider) { return injector.set(provider.provide, provider); });
+        var injector = di_1.Injector.create(tslib_1.__spreadArray([
+            { provide: di_1.INJECTOR_SCOPE, useValue: 'root' },
+            { provide: shared_1.APP_CONTEXT, useValue: tslib_1.__assign({ useMicroManage: function () { return injector.get(micro_2.MicroManage); } }, context) },
+            { provide: shared_1.HttpHandler, useExisting: shared_1.HttpInterceptingHandler },
+            { provide: shared_1.JsonConfigService, useExisting: json_config_1.JsonConfigService },
+            { provide: shared_1.AppContextService, useExisting: app_context_1.AppContextService }
+        ], providers, true), this.platformInjector);
         return injector;
     };
     Platform.prototype.mergeMicroToSSR = function (middleware) {
@@ -84,6 +83,9 @@ var Platform = /** @class */ (function () {
                 return [2 /*return*/, (0, rxjs_1.lastValueFrom)(appContext.getpageMicroMiddleware().reduce(function (input, middleware) { return (input.pipe((0, operators_1.switchMap)(_this.mergeMicroToSSR(middleware)))); }, (0, rxjs_1.of)(options)))];
             });
         });
+    };
+    Platform.prototype.parseParams = function (providers, render) {
+        return typeof providers === 'function' ? [[], providers] : [tslib_1.__spreadArray([], providers, true), render];
     };
     Platform.prototype.getLocation = function (request, isMicro) {
         var _a = request.params.pathname, pathname = _a === void 0 ? '' : _a;

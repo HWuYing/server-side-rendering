@@ -1,17 +1,17 @@
-import { Provider } from '@fm/di';
+import { Injector, Provider } from '@fm/di';
 declare type Render = (...args: any[]) => Promise<{
     html: string;
     styles: string;
 }>;
 export declare class Platform {
-    private providers;
-    private rootInjector;
-    constructor(providers?: Provider[]);
-    bootstrapRender(render: Render): void;
+    private platformInjector;
+    constructor(platformInjector: Injector);
+    bootstrapRender(additionalProviders: Provider[] | Render, render?: Render): void;
     private proxyRender;
     private beforeBootstrapRender;
     private mergeMicroToSSR;
     private execlMicroMiddleware;
+    private parseParams;
     private getLocation;
 }
 export {};

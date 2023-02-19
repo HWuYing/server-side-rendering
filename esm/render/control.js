@@ -13,7 +13,8 @@ export class SSRControl {
     }
     render(request, response) {
         return __awaiter(this, void 0, void 0, function* () {
-            response.end(yield this.ssrVm.render(request));
+            const { html, status, redirectUrl } = yield this.ssrVm.render(request);
+            status === '302' ? response.redirect(redirectUrl) : response.end(html);
         });
     }
 }

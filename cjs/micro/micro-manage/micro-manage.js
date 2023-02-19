@@ -18,15 +18,24 @@ var MicroManage = /** @class */ (function () {
     }
     MicroManage.prototype.bootstrapMicro = function (microName) {
         var _this = this;
-        var subject = this.microCache.get(microName);
+        var pathname = this.injector.get(shared_1.HISTORY).location.pathname;
+        var cacheKey = "".concat(microName, "-").concat(pathname);
+        var subject = this.microCache.get(cacheKey);
         if (!subject) {
-            var pathname = this.injector.get(shared_1.HISTORY).location.pathname;
-            subject = this.fetchRequire(this.resource.generateMicroPath(microName, pathname)).pipe((0, operators_1.catchError)(function (error) { return (0, rxjs_1.of)({ html: "".concat(microName, "<br/>").concat(error.message), styles: '' }); }), (0, operators_1.switchMap)(function (microResult) { return _this.reeadLinkToStyles(microName, microResult); }), (0, operators_1.map)(function (microResult) { return ({ microResult: _this.createMicroTag(microName, microResult), microName: microName }); }), (0, operators_1.shareReplay)(1));
+            subject = this.fetchRequire(this.resource.generateMicroPath(microName, pathname)).pipe((0, operators_1.catchError)(function (error) { return (0, rxjs_1.of)({ html: "".concat(microName, "<br/>").concat(error.message), styles: '', error: error }); }), (0, operators_1.tap)(function (microResult) { return _this.checkRedirect(microResult); }), (0, operators_1.switchMap)(function (microResult) { return _this.reeadLinkToStyles(microName, microResult); }), (0, operators_1.map)(function (microResult) { return ({ microResult: _this.createMicroTag(microName, microResult), microName: microName }); }), (0, operators_1.shareReplay)(1));
             subject.subscribe({ next: function () { return void (0); }, error: function () { return void (0); } });
             this.appContext.registryMicroMidder(function () { return subject; });
-            this.microCache.set(microName, subject);
+            this.microCache.set(cacheKey, subject);
         }
         return (0, rxjs_1.of)(null);
+    };
+    MicroManage.prototype.checkRedirect = function (_a) {
+        var status = _a.status, redirectUrl = _a.redirectUrl;
+        var isRedirect = status === '302';
+        if (isRedirect) {
+            this.injector.get(shared_1.SharedHistory).redirect(redirectUrl);
+        }
+        return isRedirect;
     };
     MicroManage.prototype.reeadLinkToStyles = function (microName, microResult) {
         var _this = this;
@@ -46,8 +55,8 @@ var MicroManage = /** @class */ (function () {
         return linkSubject;
     };
     MicroManage.prototype.createMicroTag = function (microName, microResult) {
-        var html = microResult.html, styles = microResult.styles, linkToStyles = microResult.linkToStyles, _a = microResult.microTags, microTags = _a === void 0 ? [] : _a;
-        var template = (0, shared_1.createMicroElementTemplate)(microName, { initHtml: html, initStyle: styles, linkToStyles: linkToStyles });
+        var html = microResult.html, styles = microResult.styles, linkToStyles = microResult.linkToStyles, _a = microResult.microTags, microTags = _a === void 0 ? [] : _a, error = microResult.error;
+        var template = error ? '' : (0, shared_1.createMicroElementTemplate)(microName, { initHtml: html, initStyle: styles, linkToStyles: linkToStyles });
         microTags.push((0, shared_1.templateZip)("<script id=\"create-".concat(microName, "-tag\">{template}\n          (function() {\n            const script = document.getElementById('create-").concat(microName, "-tag');\n            script.parentNode.removeChild(script)\n          })();\n        </script>"), { template: template }));
         return tslib_1.__assign(tslib_1.__assign({}, microResult), { html: '', links: [], styles: '', microTags: microTags });
     };
