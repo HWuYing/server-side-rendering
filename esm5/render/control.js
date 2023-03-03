@@ -1,5 +1,6 @@
 import { __awaiter, __decorate, __generator, __metadata } from "tslib";
 import { Get } from "@fm/server";
+import { prefixMicroPath } from "./consts";
 import { Render } from "./render";
 var SSRControl = /** @class */ (function () {
     function SSRControl(entryFile, options) {
@@ -36,8 +37,8 @@ var SSRControl = /** @class */ (function () {
         });
     };
     __decorate([
-        Get('/micro-ssr'),
-        Get('/micro-ssr/*'),
+        Get(prefixMicroPath),
+        Get("".concat(prefixMicroPath, "/*")),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [Object, Object]),
         __metadata("design:returntype", Promise)

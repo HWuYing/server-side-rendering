@@ -12,6 +12,24 @@
 			"es2015": "./esm/index.js",
 			"default": "./esm5/index.js"
 		},
+		"./common": {
+			"node": "./cjs/common/index.js",
+			"require": "./cjs/common/index.js",
+			"es2015": "./esm/common/index.js",
+			"default": "./esm5/common/index.js"
+		},
+		"./common/*": {
+			"node": "./cjs/common/*.js",
+			"require": "./cjs/common/*.js",
+			"es2015": "./esm/common/*.js",
+			"default": "./esm5/common/*.js"
+		},
+		"./common/history/*": {
+			"node": "./cjs/common/history/*.js",
+			"require": "./cjs/common/history/*.js",
+			"es2015": "./esm/common/history/*.js",
+			"default": "./esm5/common/history/*.js"
+		},
 		"./micro": {
 			"node": "./cjs/micro/index.js",
 			"require": "./cjs/micro/index.js",

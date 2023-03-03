@@ -5,18 +5,21 @@ var tslib_1 = require("tslib");
 var fs_1 = tslib_1.__importDefault(require("fs"));
 var node_fetch_1 = tslib_1.__importDefault(require("node-fetch"));
 var path_1 = tslib_1.__importDefault(require("path"));
+var consts_1 = require("./consts");
+var defaultTarget = 'http://127.0.0.1';
 var Resource = /** @class */ (function () {
     function Resource(_a) {
-        var _b = _a.microPrePath, microPrePath = _b === void 0 ? '' : _b, _c = _a.manifestFile, manifestFile = _c === void 0 ? '' : _c, _d = _a.staticDir, staticDir = _d === void 0 ? '' : _d, _e = _a.proxyTarget, proxyTarget = _e === void 0 ? 'http://127.0.0.1:3000' : _e;
+        var index = _a.index, _b = _a.microPrePath, microPrePath = _b === void 0 ? '' : _b, _c = _a.manifestFile, manifestFile = _c === void 0 ? '' : _c, _d = _a.staticDir, staticDir = _d === void 0 ? '' : _d, proxyTarget = _a.proxyTarget;
         this.cache = {};
-        this.isDevelopment = process.env.NODE_ENV === 'development';
-        this.host = proxyTarget;
+        this._isDevelopment = process.env.NODE_ENV === 'development';
         this.staticDir = staticDir;
         this.microPrePath = microPrePath;
         this.manifestFile = manifestFile;
+        this.host = proxyTarget || "".concat(defaultTarget, ":").concat(process.env.PORT);
+        this.index = index || (this.staticDir ? path_1.default.join(this.staticDir, 'index.html') : '');
     }
     Resource.prototype.generateMicroPath = function (microName, pathname) {
-        return "/".concat(this.microPrePath, "/").concat(microName, "/micro-ssr/").concat(pathname).replace(/[/]+/g, '/');
+        return "/".concat(this.microPrePath, "/").concat(microName).concat(consts_1.prefixMicroPath, "/").concat(pathname).replace(/[/]+/g, '/');
     };
     Resource.prototype.generateMicroStaticpath = function (url) {
         return "/".concat(url).replace(/[/]+/g, '/');
@@ -25,10 +28,9 @@ var Resource = /** @class */ (function () {
         var template = this.htmlTemplate;
         if (!template) {
             var rex = this.innerHeadFlag;
-            var indexPath = this.staticDir ? path_1.default.join(this.staticDir, 'index.html') : '';
             template = "".concat(rex).concat(this.innerHtmlFlag);
-            if (indexPath && fs_1.default.existsSync(indexPath)) {
-                template = fs_1.default.readFileSync(indexPath, 'utf-8');
+            if (this.index && fs_1.default.existsSync(this.index)) {
+                template = fs_1.default.readFileSync(this.index, 'utf-8');
                 template.replace(rex, '').replace('</head>', "".concat(rex, "</head>"));
             }
             this.htmlTemplate = template;
@@ -63,7 +65,7 @@ var Resource = /** @class */ (function () {
     };
     Resource.prototype.readStaticFile = function (url) {
         var fileCache = this.cache[url];
-        if (!fileCache || this.isDevelopment) {
+        if (!fileCache || this._isDevelopment) {
             var filePath = this.staticDir ? path_1.default.join(this.staticDir, url) : '';
             var source = filePath && fs_1.default.existsSync(filePath) ? fs_1.default.readFileSync(filePath, 'utf-8') : '{}';
             fileCache = { type: 'file-static', source: JSON.parse(source) };
@@ -71,6 +73,13 @@ var Resource = /** @class */ (function () {
         }
         return fileCache;
     };
+    Object.defineProperty(Resource.prototype, "isDevelopment", {
+        get: function () {
+            return this._isDevelopment;
+        },
+        enumerable: false,
+        configurable: true
+    });
     Object.defineProperty(Resource.prototype, "innerHeadFlag", {
         get: function () {
             return '<!-- inner-style -->';

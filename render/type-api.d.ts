@@ -3,6 +3,7 @@ export declare type ProxyMicroUrl = (microName: string, pathname: string) => str
 export declare abstract class ResourceInterface {
     readonly innerHeadFlag: string;
     readonly innerHtmlFlag: string;
+    readonly isDevelopment: boolean;
     abstract generateHtmlTemplate(): string;
     abstract generateMicroStaticpath(url: string): string;
     abstract generateMicroPath(microName: string, pathname: string): string;
@@ -16,6 +17,7 @@ export declare abstract class ResourceInterface {
     };
 }
 export interface ResourceOptions {
+    index?: string;
     staticDir?: string;
     proxyTarget?: string;
     manifestFile: string;

@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SSRControl = void 0;
 var tslib_1 = require("tslib");
 var server_1 = require("@fm/server");
+var consts_1 = require("./consts");
 var render_1 = require("./render");
 var SSRControl = /** @class */ (function () {
     function SSRControl(entryFile, options) {
@@ -39,8 +40,8 @@ var SSRControl = /** @class */ (function () {
         });
     };
     tslib_1.__decorate([
-        (0, server_1.Get)('/micro-ssr'),
-        (0, server_1.Get)('/micro-ssr/*'),
+        (0, server_1.Get)(consts_1.prefixMicroPath),
+        (0, server_1.Get)("".concat(consts_1.prefixMicroPath, "/*")),
         tslib_1.__metadata("design:type", Function),
         tslib_1.__metadata("design:paramtypes", [Object, Object]),
         tslib_1.__metadata("design:returntype", Promise)

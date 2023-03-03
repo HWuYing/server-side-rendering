@@ -3,13 +3,12 @@ import fs from 'fs';
 import { createRequire, Module as NativeModule } from 'module';
 import vm from 'vm';
 export class Render {
-    constructor(entryFile, options) {
+    constructor(entryFile, { resource, microName = '', vmContext = {} }) {
         this.entryFile = entryFile;
-        this.isDevelopment = process.env.NODE_ENV === 'development';
-        const { resource, microName = '', vmContext = {} } = options;
         this.resource = resource;
         this.microName = microName;
         this.vmContext = vmContext;
+        this.isDevelopment = resource.isDevelopment;
     }
     factoryVmScript() {
         const registryRender = (render) => this._compiledRender = render;

@@ -1,9 +1,10 @@
 import { __awaiter, __rest } from "tslib";
 import { Injector, INJECTOR_SCOPE } from '@fm/di';
-import { APP_CONTEXT, AppContextService, HISTORY, HttpHandler, HttpInterceptingHandler, JsonConfigService, MockHistory } from '@fm/shared';
+import { APP_CONTEXT, AppContextService, HISTORY, HttpHandler, HttpInterceptingHandler, JsonConfigService } from '@fm/shared';
 import { serializableAssets } from '@fm/shared/micro';
 import { lastValueFrom, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import { History } from '../../common';
 import { MicroManage } from '../../micro';
 import { RESOURCE } from '../../token';
 import { AppContextService as ServerAppContextService } from '../app-context';
@@ -23,7 +24,7 @@ export class Platform {
             const injector = this.beforeBootstrapRender(microConfig, [
                 ...providers,
                 { provide: RESOURCE, useValue: resource },
-                { provide: HISTORY, useClass: MockHistory }
+                { provide: HISTORY, useClass: History }
             ]);
             const history = injector.get(HISTORY);
             const { js = [], links = [] } = serializableAssets(resource.readAssetsSync());

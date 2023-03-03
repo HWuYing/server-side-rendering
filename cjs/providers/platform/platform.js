@@ -7,6 +7,7 @@ var shared_1 = require("@fm/shared");
 var micro_1 = require("@fm/shared/micro");
 var rxjs_1 = require("rxjs");
 var operators_1 = require("rxjs/operators");
+var common_1 = require("../../common");
 var micro_2 = require("../../micro");
 var token_1 = require("../../token");
 var app_context_1 = require("../app-context");
@@ -30,7 +31,7 @@ var Platform = /** @class */ (function () {
                         microConfig = { isMicro: isMicro, request: request, resource: resource.cache, renderSSR: true, location: this.getLocation(request, isMicro) };
                         injector = this.beforeBootstrapRender(microConfig, tslib_1.__spreadArray(tslib_1.__spreadArray([], providers, true), [
                             { provide: token_1.RESOURCE, useValue: resource },
-                            { provide: shared_1.HISTORY, useClass: shared_1.MockHistory }
+                            { provide: shared_1.HISTORY, useClass: common_1.History }
                         ], false));
                         history = injector.get(shared_1.HISTORY);
                         _a = (0, micro_1.serializableAssets)(resource.readAssetsSync()), _b = _a.js, js = _b === void 0 ? [] : _b, _c = _a.links, links = _c === void 0 ? [] : _c;

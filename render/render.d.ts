@@ -4,10 +4,10 @@ export declare class Render {
     private entryFile;
     private microName;
     private _compiledRender;
+    private isDevelopment;
     private resource;
     private vmContext;
-    private isDevelopment;
-    constructor(entryFile: string, options: SSROptions);
+    constructor(entryFile: string, { resource, microName, vmContext }: SSROptions);
     private factoryVmScript;
     private _render;
     private createScriptTemplate;

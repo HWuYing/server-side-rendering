@@ -6,13 +6,13 @@ var fs_1 = tslib_1.__importDefault(require("fs"));
 var module_1 = require("module");
 var vm_1 = tslib_1.__importDefault(require("vm"));
 var Render = /** @class */ (function () {
-    function Render(entryFile, options) {
+    function Render(entryFile, _a) {
+        var resource = _a.resource, _b = _a.microName, microName = _b === void 0 ? '' : _b, _c = _a.vmContext, vmContext = _c === void 0 ? {} : _c;
         this.entryFile = entryFile;
-        this.isDevelopment = process.env.NODE_ENV === 'development';
-        var resource = options.resource, _a = options.microName, microName = _a === void 0 ? '' : _a, _b = options.vmContext, vmContext = _b === void 0 ? {} : _b;
         this.resource = resource;
         this.microName = microName;
         this.vmContext = vmContext;
+        this.isDevelopment = resource.isDevelopment;
     }
     Render.prototype.factoryVmScript = function () {
         var _this = this;

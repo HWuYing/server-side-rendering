@@ -1,5 +1,6 @@
 import { __awaiter, __decorate, __metadata } from "tslib";
 import { Get } from "@fm/server";
+import { prefixMicroPath } from "./consts";
 import { Render } from "./render";
 export class SSRControl {
     constructor(entryFile, options) {
@@ -19,8 +20,8 @@ export class SSRControl {
     }
 }
 __decorate([
-    Get('/micro-ssr'),
-    Get('/micro-ssr/*'),
+    Get(prefixMicroPath),
+    Get(`${prefixMicroPath}/*`),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
