@@ -8,21 +8,15 @@ import { RESOURCE } from '../../token';
 let MicroManage = class MicroManage {
     constructor(injector) {
         this.injector = injector;
-        this.microCache = new Map();
         this.microStaticCache = new Map();
         this.appContext = this.injector.get(AppContextService);
         this.resource = this.injector.get(RESOURCE);
     }
     bootstrapMicro(microName) {
         const { location: { pathname } } = this.injector.get(HISTORY);
-        const cacheKey = `${microName}-${pathname}`;
-        let subject = this.microCache.get(cacheKey);
-        if (!subject) {
-            subject = this.fetchRequire(this.resource.generateMicroPath(microName, pathname)).pipe(catchError((error) => of({ html: `${microName}<br/>${error.message}`, styles: '', error })), tap((microResult) => this.checkRedirect(microResult)), switchMap((microResult) => this.reeadLinkToStyles(microName, microResult)), map((microResult) => ({ microResult: this.createMicroTag(microName, microResult), microName })), shareReplay(1));
-            subject.subscribe({ next: () => void (0), error: () => void (0) });
-            this.appContext.registryMicroMidder(() => subject);
-            this.microCache.set(cacheKey, subject);
-        }
+        const subject = this.fetchRequire(this.resource.generateMicroPath(microName, pathname)).pipe(catchError((error) => of({ html: `${microName}<br/>${error.message}`, styles: '', error })), tap((microResult) => this.checkRedirect(microResult)), switchMap((microResult) => this.reeadLinkToStyles(microName, microResult)), map((microResult) => ({ microResult: this.createMicroTag(microName, microResult), microName })), shareReplay(1));
+        subject.subscribe({ next: () => void (0), error: () => void (0) });
+        this.appContext.registryMicroMidder(() => subject);
         return of(null);
     }
     checkRedirect({ status, redirectUrl }) {

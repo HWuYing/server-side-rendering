@@ -23,13 +23,13 @@ var Platform = /** @class */ (function () {
     Platform.prototype.proxyRender = function (providers, render, global, isMicro) {
         if (isMicro === void 0) { isMicro = false; }
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var request, resource, _global, microConfig, injector, history, _a, _b, js, _c, links, _d, html, styles, execlResult;
+            var request, resource, _global, context, injector, history, _a, _b, js, _c, links, _d, html, styles, execlResult;
             return tslib_1.__generator(this, function (_e) {
                 switch (_e.label) {
                     case 0:
                         request = global.request, resource = global.resource, _global = tslib_1.__rest(global, ["request", "resource"]);
-                        microConfig = { isMicro: isMicro, request: request, resource: resource.cache, renderSSR: true, location: this.getLocation(request, isMicro) };
-                        injector = this.beforeBootstrapRender(microConfig, tslib_1.__spreadArray(tslib_1.__spreadArray([], providers, true), [
+                        context = { isMicro: isMicro, request: request, resource: resource.cache, renderSSR: true, location: this.getLocation(request, isMicro) };
+                        injector = this.beforeBootstrapRender(context, tslib_1.__spreadArray(tslib_1.__spreadArray([], providers, true), [
                             { provide: token_1.RESOURCE, useValue: resource },
                             { provide: shared_1.HISTORY, useClass: common_1.History }
                         ], false));
@@ -50,13 +50,14 @@ var Platform = /** @class */ (function () {
     };
     Platform.prototype.beforeBootstrapRender = function (context, providers) {
         if (providers === void 0) { providers = []; }
-        var injector = di_1.Injector.create(tslib_1.__spreadArray([
+        var injector = di_1.Injector.create([
+            providers,
             { provide: di_1.INJECTOR_SCOPE, useValue: 'root' },
             { provide: shared_1.APP_CONTEXT, useValue: tslib_1.__assign({ useMicroManage: function () { return injector.get(micro_2.MicroManage); } }, context) },
             { provide: shared_1.HttpHandler, useExisting: shared_1.HttpInterceptingHandler },
             { provide: shared_1.JsonConfigService, useExisting: json_config_1.JsonConfigService },
-            { provide: shared_1.AppContextService, useExisting: app_context_1.AppContextService }
-        ], providers, true), this.platformInjector);
+            { provide: shared_1.AppContextService, useExisting: app_context_1.AppContextService },
+        ], this.platformInjector);
         return injector;
     };
     Platform.prototype.mergeMicroToSSR = function (middleware) {

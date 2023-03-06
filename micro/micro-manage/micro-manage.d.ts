@@ -5,7 +5,6 @@ export declare class MicroManage implements MicroManageInterface {
     private injector;
     sharedData: any;
     private resource;
-    private microCache;
     private microStaticCache;
     private appContext;
     loaderStyleSubject?: Subject<HTMLStyleElement> | undefined;

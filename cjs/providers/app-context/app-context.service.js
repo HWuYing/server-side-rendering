@@ -47,8 +47,7 @@ var AppContextService = /** @class */ (function (_super) {
         return JSON.stringify(this.cacheToArray(this.pageFileSource));
     };
     AppContextService.prototype.getAllFileSource = function () {
-        var map = tslib_1.__assign(tslib_1.__assign({}, this.getContext().resource), this.pageFileSource);
-        return JSON.stringify(this.cacheToArray(map));
+        return JSON.stringify(this.cacheToArray(tslib_1.__assign(tslib_1.__assign({}, this.getContext().resource), this.pageFileSource)));
     };
     AppContextService.prototype.getpageMicroMiddleware = function () {
         return this.microMiddlewareList;
@@ -62,7 +61,6 @@ var AppContextService = /** @class */ (function (_super) {
     });
     AppContextService = tslib_1.__decorate([
         (0, di_1.Injectable)(),
-        tslib_1.__param(0, (0, di_1.Inject)(di_1.Injector)),
         tslib_1.__metadata("design:paramtypes", [di_1.Injector])
     ], AppContextService);
     return AppContextService;

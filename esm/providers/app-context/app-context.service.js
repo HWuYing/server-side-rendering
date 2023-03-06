@@ -1,5 +1,5 @@
-import { __awaiter, __decorate, __metadata, __param } from "tslib";
-import { Inject, Injectable, Injector } from '@fm/di';
+import { __awaiter, __decorate, __metadata } from "tslib";
+import { Injectable, Injector } from '@fm/di';
 import { AppContextService as SharedAppContextService } from '@fm/shared';
 import { RESOURCE } from '../../token';
 let AppContextService = class AppContextService extends SharedAppContextService {
@@ -39,8 +39,7 @@ let AppContextService = class AppContextService extends SharedAppContextService 
         return JSON.stringify(this.cacheToArray(this.pageFileSource));
     }
     getAllFileSource() {
-        const map = Object.assign(Object.assign({}, this.getContext().resource), this.pageFileSource);
-        return JSON.stringify(this.cacheToArray(map));
+        return JSON.stringify(this.cacheToArray(Object.assign(Object.assign({}, this.getContext().resource), this.pageFileSource)));
     }
     getpageMicroMiddleware() {
         return this.microMiddlewareList;
@@ -51,7 +50,6 @@ let AppContextService = class AppContextService extends SharedAppContextService 
 };
 AppContextService = __decorate([
     Injectable(),
-    __param(0, Inject(Injector)),
     __metadata("design:paramtypes", [Injector])
 ], AppContextService);
 export { AppContextService };

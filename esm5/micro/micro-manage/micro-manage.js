@@ -8,7 +8,6 @@ import { RESOURCE } from '../../token';
 var MicroManage = /** @class */ (function () {
     function MicroManage(injector) {
         this.injector = injector;
-        this.microCache = new Map();
         this.microStaticCache = new Map();
         this.appContext = this.injector.get(AppContextService);
         this.resource = this.injector.get(RESOURCE);
@@ -16,14 +15,9 @@ var MicroManage = /** @class */ (function () {
     MicroManage.prototype.bootstrapMicro = function (microName) {
         var _this = this;
         var pathname = this.injector.get(HISTORY).location.pathname;
-        var cacheKey = "".concat(microName, "-").concat(pathname);
-        var subject = this.microCache.get(cacheKey);
-        if (!subject) {
-            subject = this.fetchRequire(this.resource.generateMicroPath(microName, pathname)).pipe(catchError(function (error) { return of({ html: "".concat(microName, "<br/>").concat(error.message), styles: '', error: error }); }), tap(function (microResult) { return _this.checkRedirect(microResult); }), switchMap(function (microResult) { return _this.reeadLinkToStyles(microName, microResult); }), map(function (microResult) { return ({ microResult: _this.createMicroTag(microName, microResult), microName: microName }); }), shareReplay(1));
-            subject.subscribe({ next: function () { return void (0); }, error: function () { return void (0); } });
-            this.appContext.registryMicroMidder(function () { return subject; });
-            this.microCache.set(cacheKey, subject);
-        }
+        var subject = this.fetchRequire(this.resource.generateMicroPath(microName, pathname)).pipe(catchError(function (error) { return of({ html: "".concat(microName, "<br/>").concat(error.message), styles: '', error: error }); }), tap(function (microResult) { return _this.checkRedirect(microResult); }), switchMap(function (microResult) { return _this.reeadLinkToStyles(microName, microResult); }), map(function (microResult) { return ({ microResult: _this.createMicroTag(microName, microResult), microName: microName }); }), shareReplay(1));
+        subject.subscribe({ next: function () { return void (0); }, error: function () { return void (0); } });
+        this.appContext.registryMicroMidder(function () { return subject; });
         return of(null);
     };
     MicroManage.prototype.checkRedirect = function (_a) {

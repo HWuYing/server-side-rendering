@@ -20,13 +20,13 @@ var Platform = /** @class */ (function () {
     Platform.prototype.proxyRender = function (providers, render, global, isMicro) {
         if (isMicro === void 0) { isMicro = false; }
         return __awaiter(this, void 0, void 0, function () {
-            var request, resource, _global, microConfig, injector, history, _a, _b, js, _c, links, _d, html, styles, execlResult;
+            var request, resource, _global, context, injector, history, _a, _b, js, _c, links, _d, html, styles, execlResult;
             return __generator(this, function (_e) {
                 switch (_e.label) {
                     case 0:
                         request = global.request, resource = global.resource, _global = __rest(global, ["request", "resource"]);
-                        microConfig = { isMicro: isMicro, request: request, resource: resource.cache, renderSSR: true, location: this.getLocation(request, isMicro) };
-                        injector = this.beforeBootstrapRender(microConfig, __spreadArray(__spreadArray([], providers, true), [
+                        context = { isMicro: isMicro, request: request, resource: resource.cache, renderSSR: true, location: this.getLocation(request, isMicro) };
+                        injector = this.beforeBootstrapRender(context, __spreadArray(__spreadArray([], providers, true), [
                             { provide: RESOURCE, useValue: resource },
                             { provide: HISTORY, useClass: History }
                         ], false));
@@ -47,13 +47,14 @@ var Platform = /** @class */ (function () {
     };
     Platform.prototype.beforeBootstrapRender = function (context, providers) {
         if (providers === void 0) { providers = []; }
-        var injector = Injector.create(__spreadArray([
+        var injector = Injector.create([
+            providers,
             { provide: INJECTOR_SCOPE, useValue: 'root' },
             { provide: APP_CONTEXT, useValue: __assign({ useMicroManage: function () { return injector.get(MicroManage); } }, context) },
             { provide: HttpHandler, useExisting: HttpInterceptingHandler },
             { provide: JsonConfigService, useExisting: ServerJsonConfigService },
-            { provide: AppContextService, useExisting: ServerAppContextService }
-        ], providers, true), this.platformInjector);
+            { provide: AppContextService, useExisting: ServerAppContextService },
+        ], this.platformInjector);
         return injector;
     };
     Platform.prototype.mergeMicroToSSR = function (middleware) {

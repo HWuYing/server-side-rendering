@@ -20,8 +20,8 @@ export class Platform {
     proxyRender(providers, render, global, isMicro = false) {
         return __awaiter(this, void 0, void 0, function* () {
             const { request, resource } = global, _global = __rest(global, ["request", "resource"]);
-            const microConfig = { isMicro, request, resource: resource.cache, renderSSR: true, location: this.getLocation(request, isMicro) };
-            const injector = this.beforeBootstrapRender(microConfig, [
+            const context = { isMicro, request, resource: resource.cache, renderSSR: true, location: this.getLocation(request, isMicro) };
+            const injector = this.beforeBootstrapRender(context, [
                 ...providers,
                 { provide: RESOURCE, useValue: resource },
                 { provide: HISTORY, useClass: History }
@@ -37,12 +37,12 @@ export class Platform {
     }
     beforeBootstrapRender(context, providers = []) {
         const injector = Injector.create([
+            providers,
             { provide: INJECTOR_SCOPE, useValue: 'root' },
             { provide: APP_CONTEXT, useValue: Object.assign({ useMicroManage: () => injector.get(MicroManage) }, context) },
             { provide: HttpHandler, useExisting: HttpInterceptingHandler },
             { provide: JsonConfigService, useExisting: ServerJsonConfigService },
             { provide: AppContextService, useExisting: ServerAppContextService },
-            ...providers
         ], this.platformInjector);
         return injector;
     }
