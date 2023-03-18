@@ -1,5 +1,5 @@
 import { Injector, Provider } from '@fm/di';
-declare type Render = (...args: any[]) => Promise<{
+type Render = (...args: any[]) => Promise<{
     html: string;
     styles: string;
 }>;

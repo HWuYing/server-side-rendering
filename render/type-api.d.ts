@@ -1,5 +1,5 @@
 import { RequestInit } from 'node-fetch';
-export declare type ProxyMicroUrl = (microName: string, pathname: string) => string;
+export type ProxyMicroUrl = (microName: string, pathname: string) => string;
 export declare abstract class ResourceInterface {
     readonly innerHeadFlag: string;
     readonly innerHtmlFlag: string;
