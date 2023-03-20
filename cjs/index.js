@@ -6,4 +6,4 @@ var tslib_1 = require("tslib");
 // export { JsonConfigService } from './providers/json-config';
 var platform_1 = require("./providers/platform");
 Object.defineProperty(exports, "dynamicPlatform", { enumerable: true, get: function () { return platform_1.dynamicPlatform; } });
-tslib_1.__exportStar(require("@fm/shared"), exports);
+tslib_1.__exportStar(require("@fm/core"), exports);

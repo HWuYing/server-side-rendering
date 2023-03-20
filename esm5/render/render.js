@@ -19,8 +19,8 @@ var Render = /** @class */ (function () {
         var script = new vm.Script(wrapper, { filename: 'server-entry.js', displayErrors: true });
         var timerContext = { setTimeout: setTimeout, setInterval: setInterval, clearInterval: clearInterval, clearTimeout: clearTimeout };
         var vmContext = __assign(__assign({ Buffer: Buffer, process: process, console: console, registryRender: registryRender }, timerContext), this.vmContext);
-        var compiledWrapper = script.runInContext(vm.createContext(vmContext));
-        compiledWrapper(m.exports, m.require, m);
+        var compiledScript = script.runInContext(vm.createContext(vmContext));
+        compiledScript(m.exports, m.require, m);
     };
     Render.prototype._render = function (request, isMicro) {
         return __awaiter(this, void 0, void 0, function () {

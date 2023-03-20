@@ -1,6 +1,6 @@
 import { __decorate, __metadata } from "tslib";
 import { Injectable, Injector } from '@fm/di';
-import { AppContextService, createMicroElementTemplate, HISTORY, SharedHistory, templateZip } from '@fm/shared';
+import { AppContextService, createMicroElementTemplate, HISTORY, SharedHistory, templateZip } from '@fm/core';
 import { cloneDeep, isEmpty } from 'lodash';
 import { forkJoin, from, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap, tap } from 'rxjs/operators';

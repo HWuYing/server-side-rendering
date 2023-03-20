@@ -1,2 +1,2 @@
 export { dynamicPlatform } from './providers/platform';
-export * from '@fm/shared';
+export * from '@fm/core';

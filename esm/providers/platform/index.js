@@ -1,6 +1,6 @@
 import { Injector } from '@fm/di';
-import { createPlafformFactory } from '@fm/shared/providers/platform';
-import { PLATFORM } from '@fm/shared/token';
+import { createPlafformFactory } from '@fm/core/providers/platform';
+import { PLATFORM } from '@fm/core/token';
 import { Platform } from './platform';
 const _CORE_PLATFORM_PROVIDERS = [
     { provide: Platform, deps: [Injector] },

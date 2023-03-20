@@ -1,7 +1,7 @@
 import { __awaiter, __rest } from "tslib";
 import { Injector, INJECTOR_SCOPE } from '@fm/di';
-import { APP_CONTEXT, AppContextService, HISTORY, HttpHandler, HttpInterceptingHandler, JsonConfigService } from '@fm/shared';
-import { serializableAssets } from '@fm/shared/micro';
+import { APP_CONTEXT, AppContextService, HISTORY, HttpHandler, HttpInterceptingHandler, JsonConfigService } from '@fm/core';
+import { serializableAssets } from '@fm/core/micro';
 import { lastValueFrom, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { History } from '../../common';
@@ -31,18 +31,18 @@ export class Platform {
             const { html, styles } = yield render(injector, Object.assign({ request }, _global));
             const execlResult = yield this.execlMicroMiddleware(injector, { html, styles, js, links, microTags: [], microFetchData: [] });
             execlResult.fetchData = injector.get(AppContextService).getPageFileSource();
-            injector.destory();
+            injector.destroy();
             return history.redirect ? { status: '302', redirectUrl: history.redirect.url } : execlResult;
         });
     }
     beforeBootstrapRender(context, providers = []) {
         const injector = Injector.create([
-            providers,
             { provide: INJECTOR_SCOPE, useValue: 'root' },
             { provide: APP_CONTEXT, useValue: Object.assign({ useMicroManage: () => injector.get(MicroManage) }, context) },
             { provide: HttpHandler, useExisting: HttpInterceptingHandler },
             { provide: JsonConfigService, useExisting: ServerJsonConfigService },
             { provide: AppContextService, useExisting: ServerAppContextService },
+            providers
         ], this.platformInjector);
         return injector;
     }

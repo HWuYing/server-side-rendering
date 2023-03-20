@@ -1,7 +1,7 @@
 import { __assign, __awaiter, __generator, __rest, __spreadArray } from "tslib";
 import { Injector, INJECTOR_SCOPE } from '@fm/di';
-import { APP_CONTEXT, AppContextService, HISTORY, HttpHandler, HttpInterceptingHandler, JsonConfigService } from '@fm/shared';
-import { serializableAssets } from '@fm/shared/micro';
+import { APP_CONTEXT, AppContextService, HISTORY, HttpHandler, HttpInterceptingHandler, JsonConfigService } from '@fm/core';
+import { serializableAssets } from '@fm/core/micro';
 import { lastValueFrom, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { History } from '../../common';
@@ -39,7 +39,7 @@ var Platform = /** @class */ (function () {
                     case 2:
                         execlResult = _e.sent();
                         execlResult.fetchData = injector.get(AppContextService).getPageFileSource();
-                        injector.destory();
+                        injector.destroy();
                         return [2 /*return*/, history.redirect ? { status: '302', redirectUrl: history.redirect.url } : execlResult];
                 }
             });
@@ -48,12 +48,12 @@ var Platform = /** @class */ (function () {
     Platform.prototype.beforeBootstrapRender = function (context, providers) {
         if (providers === void 0) { providers = []; }
         var injector = Injector.create([
-            providers,
             { provide: INJECTOR_SCOPE, useValue: 'root' },
             { provide: APP_CONTEXT, useValue: __assign({ useMicroManage: function () { return injector.get(MicroManage); } }, context) },
             { provide: HttpHandler, useExisting: HttpInterceptingHandler },
             { provide: JsonConfigService, useExisting: ServerJsonConfigService },
             { provide: AppContextService, useExisting: ServerAppContextService },
+            providers
         ], this.platformInjector);
         return injector;
     };

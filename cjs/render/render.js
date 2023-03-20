@@ -22,8 +22,8 @@ var Render = /** @class */ (function () {
         var script = new vm_1.default.Script(wrapper, { filename: 'server-entry.js', displayErrors: true });
         var timerContext = { setTimeout: setTimeout, setInterval: setInterval, clearInterval: clearInterval, clearTimeout: clearTimeout };
         var vmContext = tslib_1.__assign(tslib_1.__assign({ Buffer: Buffer, process: process, console: console, registryRender: registryRender }, timerContext), this.vmContext);
-        var compiledWrapper = script.runInContext(vm_1.default.createContext(vmContext));
-        compiledWrapper(m.exports, m.require, m);
+        var compiledScript = script.runInContext(vm_1.default.createContext(vmContext));
+        compiledScript(m.exports, m.require, m);
     };
     Render.prototype._render = function (request, isMicro) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {

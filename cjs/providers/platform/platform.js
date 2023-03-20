@@ -3,8 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Platform = void 0;
 var tslib_1 = require("tslib");
 var di_1 = require("@fm/di");
-var shared_1 = require("@fm/shared");
-var micro_1 = require("@fm/shared/micro");
+var core_1 = require("@fm/core");
+var micro_1 = require("@fm/core/micro");
 var rxjs_1 = require("rxjs");
 var operators_1 = require("rxjs/operators");
 var common_1 = require("../../common");
@@ -31,9 +31,9 @@ var Platform = /** @class */ (function () {
                         context = { isMicro: isMicro, request: request, resource: resource.cache, renderSSR: true, location: this.getLocation(request, isMicro) };
                         injector = this.beforeBootstrapRender(context, tslib_1.__spreadArray(tslib_1.__spreadArray([], providers, true), [
                             { provide: token_1.RESOURCE, useValue: resource },
-                            { provide: shared_1.HISTORY, useClass: common_1.History }
+                            { provide: core_1.HISTORY, useClass: common_1.History }
                         ], false));
-                        history = injector.get(shared_1.HISTORY);
+                        history = injector.get(core_1.HISTORY);
                         _a = (0, micro_1.serializableAssets)(resource.readAssetsSync()), _b = _a.js, js = _b === void 0 ? [] : _b, _c = _a.links, links = _c === void 0 ? [] : _c;
                         return [4 /*yield*/, render(injector, tslib_1.__assign({ request: request }, _global))];
                     case 1:
@@ -41,8 +41,8 @@ var Platform = /** @class */ (function () {
                         return [4 /*yield*/, this.execlMicroMiddleware(injector, { html: html, styles: styles, js: js, links: links, microTags: [], microFetchData: [] })];
                     case 2:
                         execlResult = _e.sent();
-                        execlResult.fetchData = injector.get(shared_1.AppContextService).getPageFileSource();
-                        injector.destory();
+                        execlResult.fetchData = injector.get(core_1.AppContextService).getPageFileSource();
+                        injector.destroy();
                         return [2 /*return*/, history.redirect ? { status: '302', redirectUrl: history.redirect.url } : execlResult];
                 }
             });
@@ -51,12 +51,12 @@ var Platform = /** @class */ (function () {
     Platform.prototype.beforeBootstrapRender = function (context, providers) {
         if (providers === void 0) { providers = []; }
         var injector = di_1.Injector.create([
-            providers,
             { provide: di_1.INJECTOR_SCOPE, useValue: 'root' },
-            { provide: shared_1.APP_CONTEXT, useValue: tslib_1.__assign({ useMicroManage: function () { return injector.get(micro_2.MicroManage); } }, context) },
-            { provide: shared_1.HttpHandler, useExisting: shared_1.HttpInterceptingHandler },
-            { provide: shared_1.JsonConfigService, useExisting: json_config_1.JsonConfigService },
-            { provide: shared_1.AppContextService, useExisting: app_context_1.AppContextService },
+            { provide: core_1.APP_CONTEXT, useValue: tslib_1.__assign({ useMicroManage: function () { return injector.get(micro_2.MicroManage); } }, context) },
+            { provide: core_1.HttpHandler, useExisting: core_1.HttpInterceptingHandler },
+            { provide: core_1.JsonConfigService, useExisting: json_config_1.JsonConfigService },
+            { provide: core_1.AppContextService, useExisting: app_context_1.AppContextService },
+            providers
         ], this.platformInjector);
         return injector;
     };
@@ -81,7 +81,7 @@ var Platform = /** @class */ (function () {
             var appContext;
             var _this = this;
             return tslib_1.__generator(this, function (_a) {
-                appContext = injector.get(shared_1.AppContextService);
+                appContext = injector.get(core_1.AppContextService);
                 return [2 /*return*/, (0, rxjs_1.lastValueFrom)(appContext.getpageMicroMiddleware().reduce(function (input, middleware) { return (input.pipe((0, operators_1.switchMap)(_this.mergeMicroToSSR(middleware)))); }, (0, rxjs_1.of)(options)))];
             });
         });

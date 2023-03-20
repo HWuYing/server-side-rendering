@@ -1,6 +1,6 @@
 import { __assign, __awaiter, __decorate, __extends, __generator, __metadata } from "tslib";
 import { Injectable, Injector } from '@fm/di';
-import { AppContextService as SharedAppContextService } from '@fm/shared';
+import { AppContextService as SharedAppContextService } from '@fm/core';
 import { RESOURCE } from '../../token';
 var AppContextService = /** @class */ (function (_super) {
     __extends(AppContextService, _super);
