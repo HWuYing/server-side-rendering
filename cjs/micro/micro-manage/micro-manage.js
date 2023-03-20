@@ -27,7 +27,7 @@ var MicroManage = /** @class */ (function () {
         var status = _a.status, redirectUrl = _a.redirectUrl;
         var isRedirect = status === '302';
         if (isRedirect) {
-            this.injector.get(core_1.SharedHistory).redirect(redirectUrl);
+            this.injector.get(core_1.CustomHistory).redirect(redirectUrl);
         }
         return isRedirect;
     };

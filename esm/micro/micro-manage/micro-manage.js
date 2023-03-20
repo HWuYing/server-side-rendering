@@ -1,6 +1,6 @@
 import { __decorate, __metadata } from "tslib";
 import { Injectable, Injector } from '@fm/di';
-import { AppContextService, createMicroElementTemplate, HISTORY, SharedHistory, templateZip } from '@fm/core';
+import { AppContextService, createMicroElementTemplate, HISTORY, CustomHistory, templateZip } from '@fm/core';
 import { cloneDeep, isEmpty } from 'lodash';
 import { forkJoin, from, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap, tap } from 'rxjs/operators';
@@ -22,7 +22,7 @@ let MicroManage = class MicroManage {
     checkRedirect({ status, redirectUrl }) {
         const isRedirect = status === '302';
         if (isRedirect) {
-            this.injector.get(SharedHistory).redirect(redirectUrl);
+            this.injector.get(CustomHistory).redirect(redirectUrl);
         }
         return isRedirect;
     }
