@@ -11,6 +11,7 @@ export declare class Platform {
     private beforeBootstrapRender;
     private mergeMicroToSSR;
     private execlMicroMiddleware;
+    private runRender;
     private parseParams;
     private getLocation;
 }

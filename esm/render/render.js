@@ -17,7 +17,7 @@ export class Render {
         const script = new vm.Script(wrapper, { filename: 'server-entry.js', displayErrors: true });
         const timerContext = { setTimeout, setInterval, clearInterval, clearTimeout };
         const vmContext = Object.assign(Object.assign({ Buffer, process, console, registryRender }, timerContext), this.vmContext);
-        const compiledScript = script.runInContext(vm.createContext(vmContext));
+        const compiledScript = script.runInNewContext(vm.createContext(vmContext));
         compiledScript(m.exports, m.require, m);
     }
     _render(request, isMicro) {

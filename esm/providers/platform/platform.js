@@ -1,7 +1,8 @@
 import { __awaiter, __rest } from "tslib";
-import { Injector, INJECTOR_SCOPE } from '@fm/di';
 import { APP_CONTEXT, AppContextService, HISTORY, HttpHandler, HttpInterceptingHandler, JsonConfigService } from '@fm/core';
 import { serializableAssets } from '@fm/core/micro';
+import { APPLICATION_TOKEN } from '@fm/core/providers/platform';
+import { Injector, INJECTOR_SCOPE } from '@fm/di';
 import { lastValueFrom, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { History } from '../../common';
@@ -28,7 +29,7 @@ export class Platform {
             ]);
             const history = injector.get(HISTORY);
             const { js = [], links = [] } = serializableAssets(resource.readAssetsSync());
-            const { html, styles } = yield render(injector, Object.assign({ request }, _global));
+            const { html, styles } = yield this.runRender(injector, Object.assign({ request }, _global), render);
             const execlResult = yield this.execlMicroMiddleware(injector, { html, styles, js, links, microTags: [], microFetchData: [] });
             execlResult.fetchData = injector.get(AppContextService).getPageFileSource();
             injector.destroy();
@@ -61,6 +62,10 @@ export class Platform {
             const appContext = injector.get(AppContextService);
             return lastValueFrom(appContext.getpageMicroMiddleware().reduce((input, middleware) => (input.pipe(switchMap(this.mergeMicroToSSR(middleware)))), of(options)));
         });
+    }
+    runRender(injector, options, render) {
+        const application = injector.get(APPLICATION_TOKEN);
+        return (render || application.bootstrapRender).call(application, injector, options);
     }
     parseParams(providers, render) {
         return typeof providers === 'function' ? [[], providers] : [[...providers], render];

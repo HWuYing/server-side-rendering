@@ -1,7 +1,8 @@
 import { __assign, __awaiter, __generator, __rest, __spreadArray } from "tslib";
-import { Injector, INJECTOR_SCOPE } from '@fm/di';
 import { APP_CONTEXT, AppContextService, HISTORY, HttpHandler, HttpInterceptingHandler, JsonConfigService } from '@fm/core';
 import { serializableAssets } from '@fm/core/micro';
+import { APPLICATION_TOKEN } from '@fm/core/providers/platform';
+import { Injector, INJECTOR_SCOPE } from '@fm/di';
 import { lastValueFrom, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { History } from '../../common';
@@ -32,7 +33,7 @@ var Platform = /** @class */ (function () {
                         ], false));
                         history = injector.get(HISTORY);
                         _a = serializableAssets(resource.readAssetsSync()), _b = _a.js, js = _b === void 0 ? [] : _b, _c = _a.links, links = _c === void 0 ? [] : _c;
-                        return [4 /*yield*/, render(injector, __assign({ request: request }, _global))];
+                        return [4 /*yield*/, this.runRender(injector, __assign({ request: request }, _global), render)];
                     case 1:
                         _d = _e.sent(), html = _d.html, styles = _d.styles;
                         return [4 /*yield*/, this.execlMicroMiddleware(injector, { html: html, styles: styles, js: js, links: links, microTags: [], microFetchData: [] })];
@@ -82,6 +83,10 @@ var Platform = /** @class */ (function () {
                 return [2 /*return*/, lastValueFrom(appContext.getpageMicroMiddleware().reduce(function (input, middleware) { return (input.pipe(switchMap(_this.mergeMicroToSSR(middleware)))); }, of(options)))];
             });
         });
+    };
+    Platform.prototype.runRender = function (injector, options, render) {
+        var application = injector.get(APPLICATION_TOKEN);
+        return (render || application.bootstrapRender).call(application, injector, options);
     };
     Platform.prototype.parseParams = function (providers, render) {
         return typeof providers === 'function' ? [[], providers] : [__spreadArray([], providers, true), render];

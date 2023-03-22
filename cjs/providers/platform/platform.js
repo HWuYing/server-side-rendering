@@ -2,9 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Platform = void 0;
 var tslib_1 = require("tslib");
-var di_1 = require("@fm/di");
 var core_1 = require("@fm/core");
 var micro_1 = require("@fm/core/micro");
+var platform_1 = require("@fm/core/providers/platform");
+var di_1 = require("@fm/di");
 var rxjs_1 = require("rxjs");
 var operators_1 = require("rxjs/operators");
 var common_1 = require("../../common");
@@ -35,7 +36,7 @@ var Platform = /** @class */ (function () {
                         ], false));
                         history = injector.get(core_1.HISTORY);
                         _a = (0, micro_1.serializableAssets)(resource.readAssetsSync()), _b = _a.js, js = _b === void 0 ? [] : _b, _c = _a.links, links = _c === void 0 ? [] : _c;
-                        return [4 /*yield*/, render(injector, tslib_1.__assign({ request: request }, _global))];
+                        return [4 /*yield*/, this.runRender(injector, tslib_1.__assign({ request: request }, _global), render)];
                     case 1:
                         _d = _e.sent(), html = _d.html, styles = _d.styles;
                         return [4 /*yield*/, this.execlMicroMiddleware(injector, { html: html, styles: styles, js: js, links: links, microTags: [], microFetchData: [] })];
@@ -85,6 +86,10 @@ var Platform = /** @class */ (function () {
                 return [2 /*return*/, (0, rxjs_1.lastValueFrom)(appContext.getpageMicroMiddleware().reduce(function (input, middleware) { return (input.pipe((0, operators_1.switchMap)(_this.mergeMicroToSSR(middleware)))); }, (0, rxjs_1.of)(options)))];
             });
         });
+    };
+    Platform.prototype.runRender = function (injector, options, render) {
+        var application = injector.get(platform_1.APPLICATION_TOKEN);
+        return (render || application.bootstrapRender).call(application, injector, options);
     };
     Platform.prototype.parseParams = function (providers, render) {
         return typeof providers === 'function' ? [[], providers] : [tslib_1.__spreadArray([], providers, true), render];
