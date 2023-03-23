@@ -52,7 +52,6 @@ var Platform = /** @class */ (function () {
     Platform.prototype.beforeBootstrapRender = function (context, providers) {
         if (providers === void 0) { providers = []; }
         var injector = di_1.Injector.create([
-            { provide: di_1.INJECTOR_SCOPE, useValue: 'root' },
             { provide: core_1.APP_CONTEXT, useValue: tslib_1.__assign({ useMicroManage: function () { return injector.get(micro_2.MicroManage); } }, context) },
             { provide: core_1.HttpHandler, useExisting: core_1.HttpInterceptingHandler },
             { provide: core_1.JsonConfigService, useExisting: json_config_1.JsonConfigService },

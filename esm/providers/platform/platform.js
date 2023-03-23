@@ -2,7 +2,7 @@ import { __awaiter, __rest } from "tslib";
 import { APP_CONTEXT, AppContextService, HISTORY, HttpHandler, HttpInterceptingHandler, JsonConfigService } from '@fm/core';
 import { serializableAssets } from '@fm/core/micro';
 import { APPLICATION_TOKEN } from '@fm/core/providers/platform';
-import { Injector, INJECTOR_SCOPE } from '@fm/di';
+import { Injector } from '@fm/di';
 import { lastValueFrom, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { History } from '../../common';
@@ -38,7 +38,6 @@ export class Platform {
     }
     beforeBootstrapRender(context, providers = []) {
         const injector = Injector.create([
-            { provide: INJECTOR_SCOPE, useValue: 'root' },
             { provide: APP_CONTEXT, useValue: Object.assign({ useMicroManage: () => injector.get(MicroManage) }, context) },
             { provide: HttpHandler, useExisting: HttpInterceptingHandler },
             { provide: JsonConfigService, useExisting: ServerJsonConfigService },
