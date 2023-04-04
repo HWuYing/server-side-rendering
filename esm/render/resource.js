@@ -1,73 +1,67 @@
 import { __awaiter } from "tslib";
 import fs from 'fs';
-import fetch from 'node-fetch';
-import path from 'path';
-import { prefixMicroPath } from './consts';
-const defaultTarget = 'http://127.0.0.1';
 export class Resource {
-    constructor({ index, microPrePath = '', manifestFile = '', staticDir = '', proxyTarget }) {
-        this.cache = {};
-        this._isDevelopment = process.env.NODE_ENV === 'development';
-        this.staticDir = staticDir;
-        this.microPrePath = microPrePath;
-        this.manifestFile = manifestFile;
-        this.host = proxyTarget || `${defaultTarget}:${process.env.PORT}`;
-        this.index = index || (this.staticDir ? path.join(this.staticDir, 'index.html') : '');
+    constructor(options) {
+        this.options = options;
+        this.filesCache = {};
+        this.isDevelopment = process.env.NODE_ENV === 'development';
     }
-    generateMicroPath(microName, pathname) {
-        return `/${this.microPrePath}/${microName}${prefixMicroPath}/${pathname}`.replace(/[/]+/g, '/');
-    }
-    generateMicroStaticpath(url) {
-        return `/${url}`.replace(/[/]+/g, '/');
+    getMicroPath(microName, pathname) {
+        return this.options.getMicroPath(microName, pathname);
     }
     generateHtmlTemplate() {
-        let template = this.htmlTemplate;
-        if (!template) {
-            const rex = this.innerHeadFlag;
-            template = `${rex}${this.innerHtmlFlag}`;
-            if (this.index && fs.existsSync(this.index)) {
-                template = fs.readFileSync(this.index, 'utf-8');
-                template.replace(rex, '').replace('</head>', `${rex}</head>`);
-            }
+        const rex = this.innerHeadFlag;
+        const index = this.options.getIndexPath();
+        let template = `${rex}${this.innerHtmlFlag}`;
+        if (index && fs.existsSync(index)) {
+            template = fs.readFileSync(index, 'utf-8').replace(rex, '').replace('</head>', `${rex}</head>`);
             this.htmlTemplate = template;
         }
-        return template;
+        return this.htmlTemplate;
     }
-    proxyFetch(url, init) {
+    proxyFetch(req, init = {}) {
         return __awaiter(this, void 0, void 0, function* () {
-            const _url = /http|https/.test(url) ? url : `${this.host}/${url.replace(/^[/]+/, '')}`;
-            const res = yield fetch(_url, init);
-            const { status, statusText } = res;
-            if (![404, 504].includes(status)) {
-                return res;
+            let url = req;
+            if (typeof url === 'string') {
+                url = /^http(s?)/.test(url) ? url : `${this.options.proxyHost}/${url.replace(/^[/]+/, '')}`;
             }
-            throw new Error(`${status}: ${statusText}`);
+            const res = yield this.options.fetch(url, init);
+            if ([404, 504].includes(res.status))
+                throw new Error(`${res.status}: ${res.statusText}`);
+            return res;
         });
     }
     readAssetsSync() {
         let assetsResult = this.assetsConfig;
-        if (!assetsResult && this.manifestFile && fs.existsSync(this.manifestFile)) {
-            assetsResult = fs.readFileSync(this.manifestFile, 'utf-8');
+        const manifestFile = this.options.getManifestFilePath();
+        if (!assetsResult && manifestFile && fs.existsSync(manifestFile)) {
+            assetsResult = fs.readFileSync(manifestFile, 'utf-8');
         }
-        return JSON.parse(assetsResult || '{}');
+        return JSON.parse(assetsResult);
     }
     readStaticFile(url) {
-        let fileCache = this.cache[url];
-        if (!fileCache || this._isDevelopment) {
-            const filePath = this.staticDir ? path.join(this.staticDir, url) : '';
+        let fileCache = this.filesCache[url];
+        if (!fileCache) {
+            const filePath = this.options.getStaticPath(url);
             const source = filePath && fs.existsSync(filePath) ? fs.readFileSync(filePath, 'utf-8') : '{}';
             fileCache = { type: 'file-static', source: JSON.parse(source) };
-            this.cache[url] = fileCache;
+            this.filesCache[url] = fileCache;
         }
         return fileCache;
     }
-    get isDevelopment() {
-        return this._isDevelopment;
+    get vmContext() {
+        return this.options.vmContext || {};
+    }
+    get entryFile() {
+        return this.options.getEntryPath();
+    }
+    get microName() {
+        return this.options.microName || '';
     }
     get innerHeadFlag() {
-        return '<!-- inner-style -->';
+        return this.options.innerHeadFlag;
     }
     get innerHtmlFlag() {
-        return '<!-- inner-html -->';
+        return this.options.innerHtmlFlag;
     }
 }

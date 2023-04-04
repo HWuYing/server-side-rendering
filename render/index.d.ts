@@ -1,3 +1,5 @@
-export { SSRControl } from './control';
+import { Render } from './render';
+import { ResourceOptions } from './type-api';
 export { Resource } from './resource';
-export type { ResourceInterface, ResourceOptions, SSROptions } from './type-api';
+export type { Fetch, RenderInterface, ResourceOptions } from './type-api';
+export declare const createSsrVm: (options: ResourceOptions) => Render;

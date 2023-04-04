@@ -1,32 +1,41 @@
-import { RequestInit } from 'node-fetch';
-export type ProxyMicroUrl = (microName: string, pathname: string) => string;
-export declare abstract class ResourceInterface {
-    readonly innerHeadFlag: string;
-    readonly innerHtmlFlag: string;
-    readonly isDevelopment: boolean;
-    abstract generateHtmlTemplate(): string;
-    abstract generateMicroStaticpath(url: string): string;
-    abstract generateMicroPath(microName: string, pathname: string): string;
-    abstract proxyFetch(url: string, init?: RequestInit): Promise<any>;
-    abstract readAssetsSync(): {
-        [key: string]: any;
-    };
-    abstract readStaticFile(url: string): {
+import { Request } from 'express';
+export type Fetch = (url: RequestInfo | URL, init: RequestInit) => Promise<Response>;
+export interface ResourceInterface {
+    getMicroPath(microName: string, pathname: string): string;
+    proxyFetch(url: string, init?: RequestInit): Promise<any>;
+    readStaticFile(url: string): {
         type: string;
         source: any;
     };
 }
-export interface ResourceOptions {
-    index?: string;
-    staticDir?: string;
-    proxyTarget?: string;
-    manifestFile: string;
-    microPrePath?: string;
+export interface RenderInterface {
+    render(request: Request): Promise<{
+        html: string;
+        status: any;
+        redirectUrl: any;
+    }>;
+    renderMicro(request: Request): Promise<{
+        status: any;
+        redirectUrl: any;
+        html: any;
+        styles: any;
+        links: any;
+        microTags: any;
+        microFetchData: any;
+    }>;
 }
-export interface SSROptions {
-    microName?: string;
-    resource: ResourceInterface;
+export interface ResourceOptions {
+    proxyHost: string;
+    microName: string;
+    readonly fetch: Fetch;
+    readonly innerHeadFlag: string;
+    readonly innerHtmlFlag: string;
     vmContext?: {
         [key: string]: any;
     };
+    getIndexPath(): string;
+    getEntryPath(): string;
+    getManifestFilePath(): string;
+    getStaticPath(url: string): string;
+    getMicroPath(microName: string, pathname: string): string;
 }

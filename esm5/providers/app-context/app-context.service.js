@@ -6,6 +6,7 @@ var AppContextService = /** @class */ (function (_super) {
     __extends(AppContextService, _super);
     function AppContextService(injector) {
         var _this = _super.call(this, injector) || this;
+        _this.request = _this.getContext().request;
         _this.pageFileSource = {};
         _this.microMiddlewareList = [];
         _this.resource = _this.injector.get(RESOURCE);
@@ -21,7 +22,7 @@ var AppContextService = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.resource.proxyFetch(url, init).then(function (res) {
+                return [2 /*return*/, this.resource.proxyFetch(url, __assign(__assign({}, init), { request: this.request })).then(function (res) {
                         res.clone().arrayBuffer().then(function (text) {
                             var source = Buffer.from(text).toString('base64');
                             var fetchCache = { type: 'fetch-cache', method: init === null || init === void 0 ? void 0 : init.method, source: source };

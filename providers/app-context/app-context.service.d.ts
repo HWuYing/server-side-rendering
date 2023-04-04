@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 type MicroMiddleware = () => Observable<any>;
 export declare class AppContextService extends SharedAppContextService {
     private resource;
+    request: any;
     private pageFileSource;
     private microMiddlewareList;
     constructor(injector: Injector);

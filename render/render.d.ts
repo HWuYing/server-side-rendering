@@ -1,13 +1,9 @@
 import { Request } from 'express';
-import { SSROptions } from './type-api';
-export declare class Render {
-    private entryFile;
-    private microName;
+import { RenderInterface, ResourceOptions } from './type-api';
+export declare class Render implements RenderInterface {
     private _compiledRender;
-    private isDevelopment;
     private resource;
-    private vmContext;
-    constructor(entryFile: string, { resource, microName, vmContext }: SSROptions);
+    constructor(options: ResourceOptions);
     private factoryVmScript;
     private _render;
     private createScriptTemplate;

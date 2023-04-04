@@ -7,18 +7,18 @@ var di_1 = require("@fm/di");
 var lodash_1 = require("lodash");
 var rxjs_1 = require("rxjs");
 var operators_1 = require("rxjs/operators");
+var app_context_1 = require("../../providers/app-context");
 var token_1 = require("../../token");
 var MicroManage = /** @class */ (function () {
     function MicroManage(injector) {
         this.injector = injector;
         this.microStaticCache = new Map();
-        this.appContext = this.injector.get(core_1.AppContextService);
         this.resource = this.injector.get(token_1.RESOURCE);
     }
     MicroManage.prototype.bootstrapMicro = function (microName) {
         var _this = this;
         var pathname = this.injector.get(core_1.HISTORY).location.pathname;
-        var subject = this.fetchRequire(this.resource.generateMicroPath(microName, pathname)).pipe((0, operators_1.catchError)(function (error) { return (0, rxjs_1.of)({ html: "".concat(microName, "<br/>").concat(error.message), styles: '', error: error }); }), (0, operators_1.tap)(function (microResult) { return _this.checkRedirect(microResult); }), (0, operators_1.switchMap)(function (microResult) { return _this.reeadLinkToStyles(microName, microResult); }), (0, operators_1.map)(function (microResult) { return ({ microResult: _this.createMicroTag(microName, microResult), microName: microName }); }), (0, operators_1.shareReplay)(1));
+        var subject = this.fetchRequire(this.resource.getMicroPath(microName, pathname)).pipe((0, operators_1.catchError)(function (error) { return (0, rxjs_1.of)({ html: "".concat(microName, "<br/>").concat(error.message), styles: '', error: error }); }), (0, operators_1.tap)(function (microResult) { return _this.checkRedirect(microResult); }), (0, operators_1.switchMap)(function (microResult) { return _this.reeadLinkToStyles(microName, microResult); }), (0, operators_1.map)(function (microResult) { return ({ microResult: _this.createMicroTag(microName, microResult), microName: microName }); }), (0, operators_1.shareReplay)(1));
         subject.subscribe({ next: function () { return void (0); }, error: function () { return void (0); } });
         this.appContext.registryMicroMidder(function () { return subject; });
         return (0, rxjs_1.of)(null);
@@ -39,8 +39,7 @@ var MicroManage = /** @class */ (function () {
         }
         return (0, rxjs_1.forkJoin)(links.map(function (href) { return _this.getLinkCache(href); })).pipe((0, operators_1.map)(function (styles) { return (tslib_1.__assign(tslib_1.__assign({}, microResult), { linkToStyles: styles })); }));
     };
-    MicroManage.prototype.getLinkCache = function (href) {
-        var linkUrl = this.resource.generateMicroStaticpath(href);
+    MicroManage.prototype.getLinkCache = function (linkUrl) {
         var linkSubject = this.microStaticCache.get(linkUrl);
         if (!linkSubject) {
             linkSubject = this.fetchRequire(linkUrl, true).pipe((0, operators_1.shareReplay)(1), (0, operators_1.map)(lodash_1.cloneDeep));
@@ -55,8 +54,14 @@ var MicroManage = /** @class */ (function () {
         return tslib_1.__assign(tslib_1.__assign({}, microResult), { html: '', links: [], styles: '', microTags: microTags });
     };
     MicroManage.prototype.fetchRequire = function (url, isText) {
-        return (0, rxjs_1.from)(this.resource.proxyFetch(url, { method: 'get' }).then(function (res) { return !isText ? res.json() : res.text(); }));
+        if (isText === void 0) { isText = false; }
+        var init = { method: 'get', request: this.appContext.request };
+        return (0, rxjs_1.from)(this.resource.proxyFetch(url, init).then(function (res) { return isText ? res.text() : res.json(); }));
     };
+    tslib_1.__decorate([
+        (0, di_1.Prop)(core_1.AppContextService),
+        tslib_1.__metadata("design:type", app_context_1.AppContextService)
+    ], MicroManage.prototype, "appContext", void 0);
     MicroManage = tslib_1.__decorate([
         (0, di_1.Injectable)(),
         tslib_1.__metadata("design:paramtypes", [di_1.Injector])

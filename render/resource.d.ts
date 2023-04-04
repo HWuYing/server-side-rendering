@@ -1,23 +1,21 @@
-import { RequestInit } from 'node-fetch';
 import { ResourceInterface, ResourceOptions } from './type-api';
 export declare class Resource implements ResourceInterface {
-    private host;
-    private index;
-    private staticDir;
-    private manifestFile;
-    private microPrePath;
+    private options;
     private assetsConfig;
     private htmlTemplate;
-    private cache;
-    private _isDevelopment;
-    constructor({ index, microPrePath, manifestFile, staticDir, proxyTarget }: ResourceOptions);
-    generateMicroPath(microName: string, pathname: string): string;
-    generateMicroStaticpath(url: string): string;
+    private filesCache;
+    isDevelopment: boolean;
+    constructor(options: ResourceOptions);
+    getMicroPath(microName: string, pathname: string): string;
     generateHtmlTemplate(): string;
-    proxyFetch(url: string, init?: RequestInit): Promise<import("node-fetch").Response>;
+    proxyFetch(req: RequestInfo | string, init?: RequestInit): Promise<Response>;
     readAssetsSync(): any;
     readStaticFile(url: string): any;
-    get isDevelopment(): boolean;
+    get vmContext(): {
+        [key: string]: any;
+    };
+    get entryFile(): string;
+    get microName(): string;
     get innerHeadFlag(): string;
     get innerHtmlFlag(): string;
 }
