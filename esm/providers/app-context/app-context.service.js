@@ -33,7 +33,7 @@ let AppContextService = class AppContextService extends SharedAppContextService 
         this.setPageSource(url, fileCache);
         return fileCache.source;
     }
-    registryMicroMidder(middleware) {
+    registryMicroMiddler(middleware) {
         this.microMiddlewareList.push(middleware);
     }
     getPageFileSource() {
@@ -42,7 +42,7 @@ let AppContextService = class AppContextService extends SharedAppContextService 
     getAllFileSource() {
         return JSON.stringify(this.cacheToArray(Object.assign(Object.assign({}, this.getContext().resource), this.pageFileSource)));
     }
-    getpageMicroMiddleware() {
+    getPageMicroMiddleware() {
         return this.microMiddlewareList;
     }
     get fetch() {

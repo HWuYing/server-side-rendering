@@ -10,7 +10,7 @@ export declare class Platform {
     private proxyRender;
     private beforeBootstrapRender;
     private mergeMicroToSSR;
-    private execlMicroMiddleware;
+    private executeMicroMiddleware;
     private runRender;
     private parseParams;
     private getLocation;

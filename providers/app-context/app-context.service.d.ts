@@ -13,10 +13,10 @@ export declare class AppContextService extends SharedAppContextService {
     private cacheToArray;
     private proxyFetch;
     readStaticFile(url: string): any;
-    registryMicroMidder(middleware: MicroMiddleware): void;
+    registryMicroMiddler(middleware: MicroMiddleware): void;
     getPageFileSource(): string;
     getAllFileSource(): string;
-    getpageMicroMiddleware(): MicroMiddleware[];
+    getPageMicroMiddleware(): MicroMiddleware[];
     get fetch(): Fetch;
 }
 export {};

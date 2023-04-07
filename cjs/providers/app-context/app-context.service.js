@@ -41,7 +41,7 @@ var AppContextService = /** @class */ (function (_super) {
         this.setPageSource(url, fileCache);
         return fileCache.source;
     };
-    AppContextService.prototype.registryMicroMidder = function (middleware) {
+    AppContextService.prototype.registryMicroMiddler = function (middleware) {
         this.microMiddlewareList.push(middleware);
     };
     AppContextService.prototype.getPageFileSource = function () {
@@ -50,7 +50,7 @@ var AppContextService = /** @class */ (function (_super) {
     AppContextService.prototype.getAllFileSource = function () {
         return JSON.stringify(this.cacheToArray(tslib_1.__assign(tslib_1.__assign({}, this.getContext().resource), this.pageFileSource)));
     };
-    AppContextService.prototype.getpageMicroMiddleware = function () {
+    AppContextService.prototype.getPageMicroMiddleware = function () {
         return this.microMiddlewareList;
     };
     Object.defineProperty(AppContextService.prototype, "fetch", {

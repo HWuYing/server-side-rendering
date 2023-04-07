@@ -10,7 +10,7 @@ export declare class MicroManage implements MicroManageInterface {
     constructor(injector: Injector);
     bootstrapMicro(microName: string): Observable<any>;
     private checkRedirect;
-    private reeadLinkToStyles;
+    private readLinkToStyles;
     private getLinkCache;
     private createMicroTag;
     private fetchRequire;

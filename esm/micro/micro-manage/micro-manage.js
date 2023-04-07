@@ -14,9 +14,9 @@ let MicroManage = class MicroManage {
     }
     bootstrapMicro(microName) {
         const { location: { pathname } } = this.injector.get(HISTORY);
-        const subject = this.fetchRequire(this.resource.getMicroPath(microName, pathname)).pipe(catchError((error) => of({ html: `${microName}<br/>${error.message}`, styles: '', error })), tap((microResult) => this.checkRedirect(microResult)), switchMap((microResult) => this.reeadLinkToStyles(microName, microResult)), map((microResult) => ({ microResult: this.createMicroTag(microName, microResult), microName })), shareReplay(1));
+        const subject = this.fetchRequire(this.resource.getMicroPath(microName, pathname)).pipe(catchError((error) => of({ html: `${microName}<br/>${error.message}`, styles: '', error })), tap((microResult) => this.checkRedirect(microResult)), switchMap((microResult) => this.readLinkToStyles(microName, microResult)), map((microResult) => ({ microResult: this.createMicroTag(microName, microResult), microName })), shareReplay(1));
         subject.subscribe({ next: () => void (0), error: () => void (0) });
-        this.appContext.registryMicroMidder(() => subject);
+        this.appContext.registryMicroMiddler(() => subject);
         return of(null);
     }
     checkRedirect({ status, redirectUrl }) {
@@ -26,7 +26,7 @@ let MicroManage = class MicroManage {
         }
         return isRedirect;
     }
-    reeadLinkToStyles(microName, microResult) {
+    readLinkToStyles(microName, microResult) {
         const { links = [] } = microResult;
         if (isEmpty(links)) {
             return of(microResult);

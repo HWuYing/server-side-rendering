@@ -11,13 +11,13 @@ var _CORE_PLATFORM_PROVIDERS = [
     { provide: token_1.PLATFORM, useExisting: platform_3.Platform },
     { provide: platform_1.ApplicationContext, useFactory: function () { return platform_2.applicationContext; } }
 ];
-var createPlatform = (0, platform_1.createPlafformFactory)(null, _CORE_PLATFORM_PROVIDERS);
+var createPlatform = (0, platform_1.createPlatformFactory)(null, _CORE_PLATFORM_PROVIDERS);
 var dynamicPlatform = function (providers) {
     if (providers === void 0) { providers = []; }
     return createPlatform(platform_2.applicationContext, providers);
 };
 exports.dynamicPlatform = dynamicPlatform;
-platform_2.applicationContext.regeditStart(function () { return (0, exports.dynamicPlatform)().bootstrapRender(platform_2.applicationContext.providers); });
+platform_2.applicationContext.registerStart(function () { return (0, exports.dynamicPlatform)().bootstrapRender(platform_2.applicationContext.providers); });
 var platform_4 = require("@fm/core/providers/platform");
 Object.defineProperty(exports, "PLATFORM_SCOPE", { enumerable: true, get: function () { return platform_4.PLATFORM_SCOPE; } });
 var platform_5 = require("@fm/csr/providers/platform");

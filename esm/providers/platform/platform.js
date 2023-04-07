@@ -30,10 +30,10 @@ export class Platform {
             const history = injector.get(HISTORY);
             const { js = [], links = [] } = serializableAssets(resource.readAssetsSync());
             const { html, styles } = yield this.runRender(injector, Object.assign({ request }, _global), render);
-            const execlResult = yield this.execlMicroMiddleware(injector, { html, styles, js, links, microTags: [], microFetchData: [] });
-            execlResult.fetchData = injector.get(AppContextService).getPageFileSource();
+            const executeResult = yield this.executeMicroMiddleware(injector, { html, styles, js, links, microTags: [], microFetchData: [] });
+            executeResult.fetchData = injector.get(AppContextService).getPageFileSource();
             injector.destroy();
-            return history.redirect ? { status: '302', redirectUrl: history.redirect.url } : execlResult;
+            return history.redirect ? { status: '302', redirectUrl: history.redirect.url } : executeResult;
         });
     }
     beforeBootstrapRender(context, providers = []) {
@@ -56,10 +56,10 @@ export class Platform {
             microFetchData: microFetchData.concat(...microResult.microFetchData || [])
         })));
     }
-    execlMicroMiddleware(injector, options) {
+    executeMicroMiddleware(injector, options) {
         return __awaiter(this, void 0, void 0, function* () {
             const appContext = injector.get(AppContextService);
-            return lastValueFrom(appContext.getpageMicroMiddleware().reduce((input, middleware) => (input.pipe(switchMap(this.mergeMicroToSSR(middleware)))), of(options)));
+            return lastValueFrom(appContext.getPageMicroMiddleware().reduce((input, middleware) => (input.pipe(switchMap(this.mergeMicroToSSR(middleware)))), of(options)));
         });
     }
     runRender(injector, options, render) {

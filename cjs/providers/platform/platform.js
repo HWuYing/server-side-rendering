@@ -24,7 +24,7 @@ var Platform = /** @class */ (function () {
     Platform.prototype.proxyRender = function (providers, render, global, isMicro) {
         if (isMicro === void 0) { isMicro = false; }
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var request, resource, _global, context, injector, history, _a, _b, js, _c, links, _d, html, styles, execlResult;
+            var request, resource, _global, context, injector, history, _a, _b, js, _c, links, _d, html, styles, executeResult;
             return tslib_1.__generator(this, function (_e) {
                 switch (_e.label) {
                     case 0:
@@ -39,12 +39,12 @@ var Platform = /** @class */ (function () {
                         return [4 /*yield*/, this.runRender(injector, tslib_1.__assign({ request: request }, _global), render)];
                     case 1:
                         _d = _e.sent(), html = _d.html, styles = _d.styles;
-                        return [4 /*yield*/, this.execlMicroMiddleware(injector, { html: html, styles: styles, js: js, links: links, microTags: [], microFetchData: [] })];
+                        return [4 /*yield*/, this.executeMicroMiddleware(injector, { html: html, styles: styles, js: js, links: links, microTags: [], microFetchData: [] })];
                     case 2:
-                        execlResult = _e.sent();
-                        execlResult.fetchData = injector.get(core_1.AppContextService).getPageFileSource();
+                        executeResult = _e.sent();
+                        executeResult.fetchData = injector.get(core_1.AppContextService).getPageFileSource();
                         injector.destroy();
-                        return [2 /*return*/, history.redirect ? { status: '302', redirectUrl: history.redirect.url } : execlResult];
+                        return [2 /*return*/, history.redirect ? { status: '302', redirectUrl: history.redirect.url } : executeResult];
                 }
             });
         });
@@ -76,13 +76,13 @@ var Platform = /** @class */ (function () {
             }));
         };
     };
-    Platform.prototype.execlMicroMiddleware = function (injector, options) {
+    Platform.prototype.executeMicroMiddleware = function (injector, options) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             var appContext;
             var _this = this;
             return tslib_1.__generator(this, function (_a) {
                 appContext = injector.get(core_1.AppContextService);
-                return [2 /*return*/, (0, rxjs_1.lastValueFrom)(appContext.getpageMicroMiddleware().reduce(function (input, middleware) { return (input.pipe((0, operators_1.switchMap)(_this.mergeMicroToSSR(middleware)))); }, (0, rxjs_1.of)(options)))];
+                return [2 /*return*/, (0, rxjs_1.lastValueFrom)(appContext.getPageMicroMiddleware().reduce(function (input, middleware) { return (input.pipe((0, operators_1.switchMap)(_this.mergeMicroToSSR(middleware)))); }, (0, rxjs_1.of)(options)))];
             });
         });
     };

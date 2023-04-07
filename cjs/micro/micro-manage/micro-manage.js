@@ -18,9 +18,9 @@ var MicroManage = /** @class */ (function () {
     MicroManage.prototype.bootstrapMicro = function (microName) {
         var _this = this;
         var pathname = this.injector.get(core_1.HISTORY).location.pathname;
-        var subject = this.fetchRequire(this.resource.getMicroPath(microName, pathname)).pipe((0, operators_1.catchError)(function (error) { return (0, rxjs_1.of)({ html: "".concat(microName, "<br/>").concat(error.message), styles: '', error: error }); }), (0, operators_1.tap)(function (microResult) { return _this.checkRedirect(microResult); }), (0, operators_1.switchMap)(function (microResult) { return _this.reeadLinkToStyles(microName, microResult); }), (0, operators_1.map)(function (microResult) { return ({ microResult: _this.createMicroTag(microName, microResult), microName: microName }); }), (0, operators_1.shareReplay)(1));
+        var subject = this.fetchRequire(this.resource.getMicroPath(microName, pathname)).pipe((0, operators_1.catchError)(function (error) { return (0, rxjs_1.of)({ html: "".concat(microName, "<br/>").concat(error.message), styles: '', error: error }); }), (0, operators_1.tap)(function (microResult) { return _this.checkRedirect(microResult); }), (0, operators_1.switchMap)(function (microResult) { return _this.readLinkToStyles(microName, microResult); }), (0, operators_1.map)(function (microResult) { return ({ microResult: _this.createMicroTag(microName, microResult), microName: microName }); }), (0, operators_1.shareReplay)(1));
         subject.subscribe({ next: function () { return void (0); }, error: function () { return void (0); } });
-        this.appContext.registryMicroMidder(function () { return subject; });
+        this.appContext.registryMicroMiddler(function () { return subject; });
         return (0, rxjs_1.of)(null);
     };
     MicroManage.prototype.checkRedirect = function (_a) {
@@ -31,7 +31,7 @@ var MicroManage = /** @class */ (function () {
         }
         return isRedirect;
     };
-    MicroManage.prototype.reeadLinkToStyles = function (microName, microResult) {
+    MicroManage.prototype.readLinkToStyles = function (microName, microResult) {
         var _this = this;
         var _a = microResult.links, links = _a === void 0 ? [] : _a;
         if ((0, lodash_1.isEmpty)(links)) {
