@@ -8,8 +8,7 @@ var di_1 = require("@fm/di");
 var platform_3 = require("./platform");
 var _CORE_PLATFORM_PROVIDERS = [
     { provide: platform_3.Platform, deps: [di_1.Injector] },
-    { provide: token_1.PLATFORM, useExisting: platform_3.Platform },
-    { provide: platform_1.ApplicationContext, useFactory: function () { return platform_2.applicationContext; } }
+    { provide: token_1.PLATFORM, useExisting: platform_3.Platform }
 ];
 var createPlatform = (0, platform_1.createPlatformFactory)(null, _CORE_PLATFORM_PROVIDERS);
 var dynamicPlatform = function (providers) {

@@ -87,8 +87,17 @@ var Platform = /** @class */ (function () {
         });
     };
     Platform.prototype.runRender = function (injector, options, render) {
-        var application = injector.get(platform_1.APPLICATION_TOKEN);
-        return (render || application.bootstrapRender).call(application, injector, options);
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var application;
+            return tslib_1.__generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, injector.get(platform_1.APPLICATION_TOKEN)];
+                    case 1:
+                        application = _a.sent();
+                        return [2 /*return*/, (render || application.bootstrapRender).call(application, injector, options)];
+                }
+            });
+        });
     };
     Platform.prototype.parseParams = function (providers, render) {
         return typeof providers === 'function' ? [[], providers] : [tslib_1.__spreadArray([], providers, true), render];
