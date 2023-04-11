@@ -14,7 +14,7 @@ let MicroManage = class MicroManage {
     }
     bootstrapMicro(microName) {
         const { location: { pathname } } = this.injector.get(HISTORY);
-        const subject = this.fetchRequire(this.resource.getMicroPath(microName, pathname)).pipe(catchError((error) => of({ html: `${microName}<br/>${error.message}`, styles: '', error })), tap((microResult) => this.checkRedirect(microResult)), switchMap((microResult) => this.readLinkToStyles(microName, microResult)), map((microResult) => ({ microResult: this.createMicroTag(microName, microResult), microName })), shareReplay(1));
+        const subject = this.fetchRequire(this.resource.getMicroPath(microName, pathname), { headers: { 'server-side-render': true } }).pipe(catchError((error) => of({ html: `${microName}<br/>${error.message}`, styles: '', error })), tap((microResult) => this.checkRedirect(microResult)), switchMap((microResult) => this.readLinkToStyles(microName, microResult)), map((microResult) => ({ microResult: this.createMicroTag(microName, microResult), microName })), shareReplay(1));
         subject.subscribe({ next: () => void (0), error: () => void (0) });
         this.appContext.registryMicroMiddler(() => subject);
         return of(null);
@@ -36,7 +36,7 @@ let MicroManage = class MicroManage {
     getLinkCache(linkUrl) {
         let linkSubject = this.microStaticCache.get(linkUrl);
         if (!linkSubject) {
-            linkSubject = this.fetchRequire(linkUrl, true).pipe(shareReplay(1), map(cloneDeep));
+            linkSubject = this.fetchRequire(linkUrl, undefined, true).pipe(shareReplay(1), map(cloneDeep));
             this.microStaticCache.set(linkUrl, linkSubject);
         }
         return linkSubject;
@@ -52,8 +52,8 @@ let MicroManage = class MicroManage {
         </script>`, { template }));
         return Object.assign(Object.assign({}, microResult), { html: '', links: [], styles: '', microTags });
     }
-    fetchRequire(url, isText = false) {
-        const init = { method: 'get', request: this.appContext.request };
+    fetchRequire(url, options = {}, isText = false) {
+        const init = Object.assign(Object.assign({ method: 'get' }, options), { request: this.appContext.request });
         return from(this.resource.proxyFetch(url, init).then((res) => isText ? res.text() : res.json()));
     }
 };

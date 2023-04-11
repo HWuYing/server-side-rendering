@@ -18,7 +18,7 @@ var MicroManage = /** @class */ (function () {
     MicroManage.prototype.bootstrapMicro = function (microName) {
         var _this = this;
         var pathname = this.injector.get(core_1.HISTORY).location.pathname;
-        var subject = this.fetchRequire(this.resource.getMicroPath(microName, pathname)).pipe((0, operators_1.catchError)(function (error) { return (0, rxjs_1.of)({ html: "".concat(microName, "<br/>").concat(error.message), styles: '', error: error }); }), (0, operators_1.tap)(function (microResult) { return _this.checkRedirect(microResult); }), (0, operators_1.switchMap)(function (microResult) { return _this.readLinkToStyles(microName, microResult); }), (0, operators_1.map)(function (microResult) { return ({ microResult: _this.createMicroTag(microName, microResult), microName: microName }); }), (0, operators_1.shareReplay)(1));
+        var subject = this.fetchRequire(this.resource.getMicroPath(microName, pathname), { headers: { 'server-side-render': true } }).pipe((0, operators_1.catchError)(function (error) { return (0, rxjs_1.of)({ html: "".concat(microName, "<br/>").concat(error.message), styles: '', error: error }); }), (0, operators_1.tap)(function (microResult) { return _this.checkRedirect(microResult); }), (0, operators_1.switchMap)(function (microResult) { return _this.readLinkToStyles(microName, microResult); }), (0, operators_1.map)(function (microResult) { return ({ microResult: _this.createMicroTag(microName, microResult), microName: microName }); }), (0, operators_1.shareReplay)(1));
         subject.subscribe({ next: function () { return void (0); }, error: function () { return void (0); } });
         this.appContext.registryMicroMiddler(function () { return subject; });
         return (0, rxjs_1.of)(null);
@@ -42,7 +42,7 @@ var MicroManage = /** @class */ (function () {
     MicroManage.prototype.getLinkCache = function (linkUrl) {
         var linkSubject = this.microStaticCache.get(linkUrl);
         if (!linkSubject) {
-            linkSubject = this.fetchRequire(linkUrl, true).pipe((0, operators_1.shareReplay)(1), (0, operators_1.map)(lodash_1.cloneDeep));
+            linkSubject = this.fetchRequire(linkUrl, undefined, true).pipe((0, operators_1.shareReplay)(1), (0, operators_1.map)(lodash_1.cloneDeep));
             this.microStaticCache.set(linkUrl, linkSubject);
         }
         return linkSubject;
@@ -53,9 +53,10 @@ var MicroManage = /** @class */ (function () {
         microTags.push((0, core_1.templateZip)("<script id=\"create-".concat(microName, "-tag\">{template}\n          (function() {\n            const script = document.getElementById('create-").concat(microName, "-tag');\n            script.parentNode.removeChild(script)\n          })();\n        </script>"), { template: template }));
         return tslib_1.__assign(tslib_1.__assign({}, microResult), { html: '', links: [], styles: '', microTags: microTags });
     };
-    MicroManage.prototype.fetchRequire = function (url, isText) {
+    MicroManage.prototype.fetchRequire = function (url, options, isText) {
+        if (options === void 0) { options = {}; }
         if (isText === void 0) { isText = false; }
-        var init = { method: 'get', request: this.appContext.request };
+        var init = tslib_1.__assign(tslib_1.__assign({ method: 'get' }, options), { request: this.appContext.request });
         return (0, rxjs_1.from)(this.resource.proxyFetch(url, init).then(function (res) { return isText ? res.text() : res.json(); }));
     };
     tslib_1.__decorate([
