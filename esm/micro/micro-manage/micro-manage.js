@@ -1,6 +1,6 @@
 import { __decorate, __metadata } from "tslib";
 import { AppContextService, createMicroElementTemplate, CustomHistory, HISTORY, templateZip } from '@fm/core';
-import { Injectable, Injector, Prop } from '@fm/di';
+import { Inject, Injectable, Injector } from '@fm/di';
 import { cloneDeep, isEmpty } from 'lodash';
 import { forkJoin, from, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap, tap } from 'rxjs/operators';
@@ -58,7 +58,7 @@ let MicroManage = class MicroManage {
     }
 };
 __decorate([
-    Prop(AppContextService),
+    Inject(AppContextService),
     __metadata("design:type", ServerAppContextService)
 ], MicroManage.prototype, "appContext", void 0);
 MicroManage = __decorate([

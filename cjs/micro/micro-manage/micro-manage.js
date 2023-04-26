@@ -60,7 +60,7 @@ var MicroManage = /** @class */ (function () {
         return (0, rxjs_1.from)(this.resource.proxyFetch(url, init).then(function (res) { return isText ? res.text() : res.json(); }));
     };
     tslib_1.__decorate([
-        (0, di_1.Prop)(core_1.AppContextService),
+        (0, di_1.Inject)(core_1.AppContextService),
         tslib_1.__metadata("design:type", app_context_1.AppContextService)
     ], MicroManage.prototype, "appContext", void 0);
     MicroManage = tslib_1.__decorate([

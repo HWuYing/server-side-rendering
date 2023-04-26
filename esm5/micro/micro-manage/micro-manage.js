@@ -1,6 +1,6 @@
 import { __assign, __decorate, __metadata } from "tslib";
 import { AppContextService, createMicroElementTemplate, CustomHistory, HISTORY, templateZip } from '@fm/core';
-import { Injectable, Injector, Prop } from '@fm/di';
+import { Inject, Injectable, Injector } from '@fm/di';
 import { cloneDeep, isEmpty } from 'lodash';
 import { forkJoin, from, of } from 'rxjs';
 import { catchError, map, shareReplay, switchMap, tap } from 'rxjs/operators';
@@ -57,7 +57,7 @@ var MicroManage = /** @class */ (function () {
         return from(this.resource.proxyFetch(url, init).then(function (res) { return isText ? res.text() : res.json(); }));
     };
     __decorate([
-        Prop(AppContextService),
+        Inject(AppContextService),
         __metadata("design:type", ServerAppContextService)
     ], MicroManage.prototype, "appContext", void 0);
     MicroManage = __decorate([

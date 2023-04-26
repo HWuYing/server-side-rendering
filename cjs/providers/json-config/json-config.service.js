@@ -16,7 +16,7 @@ var JsonConfigService = /** @class */ (function (_super) {
         return (0, rxjs_1.of)((0, lodash_1.cloneDeep)(this.appContext.readStaticFile(url)));
     };
     tslib_1.__decorate([
-        (0, di_1.Prop)(app_context_1.AppContextService),
+        (0, di_1.Inject)(app_context_1.AppContextService),
         tslib_1.__metadata("design:type", app_context_1.AppContextService)
     ], JsonConfigService.prototype, "appContext", void 0);
     JsonConfigService = tslib_1.__decorate([

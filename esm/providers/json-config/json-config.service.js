@@ -1,6 +1,6 @@
 import { __decorate, __metadata } from "tslib";
 import { JsonConfigService as ShareJsonConfigService } from '@fm/core';
-import { Injectable, Prop } from '@fm/di';
+import { Inject, Injectable } from '@fm/di';
 import { cloneDeep } from 'lodash';
 import { of } from 'rxjs';
 import { AppContextService } from '../app-context';
@@ -10,7 +10,7 @@ let JsonConfigService = class JsonConfigService extends ShareJsonConfigService {
     }
 };
 __decorate([
-    Prop(AppContextService),
+    Inject(AppContextService),
     __metadata("design:type", AppContextService)
 ], JsonConfigService.prototype, "appContext", void 0);
 JsonConfigService = __decorate([
