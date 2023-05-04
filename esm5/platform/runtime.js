@@ -1,8 +1,8 @@
-import { createPlatformFactory } from '@fm/core/providers/platform';
+import { createPlatformFactory } from '@fm/core/platform';
 import { PLATFORM } from '@fm/core/token';
-import { applicationContext } from '@fm/csr/providers/platform';
+import { applicationContext } from '@fm/csr/platform/runtime';
 import { Injector } from '@fm/di';
-import { Platform } from './platform';
+import { Platform } from './index';
 var _CORE_PLATFORM_PROVIDERS = [
     { provide: Platform, deps: [Injector] },
     { provide: PLATFORM, useExisting: Platform }
@@ -13,5 +13,5 @@ export var dynamicPlatform = function (providers) {
     return createPlatform(applicationContext, providers);
 };
 applicationContext.registerStart(function () { return dynamicPlatform().bootstrapRender(applicationContext.providers); });
-export { PLATFORM_SCOPE } from '@fm/core/providers/platform';
-export { Application, Input, Prov } from '@fm/csr/providers/platform';
+export { PLATFORM_SCOPE } from '@fm/core/platform/application';
+export { Application, Input, Prov } from '@fm/csr/platform/runtime';

@@ -1,15 +1,17 @@
 import { __awaiter, __rest } from "tslib";
-import { APP_CONTEXT, AppContextService, HISTORY, HttpHandler, HttpInterceptingHandler, JsonConfigService } from '@fm/core';
+import { HttpHandler, HttpInterceptingHandler } from '@fm/core/common/http';
 import { serializableAssets } from '@fm/core/micro';
-import { APPLICATION_TOKEN } from '@fm/core/providers/platform';
+import { APP_CONTEXT, AppContextService } from '@fm/core/providers/app-context';
+import { JsonConfigService } from '@fm/core/providers/json-config';
+import { APPLICATION_TOKEN, HISTORY } from '@fm/core/token';
 import { Injector } from '@fm/di';
 import { lastValueFrom, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { History } from '../../common';
-import { MicroManage } from '../../micro';
-import { RESOURCE } from '../../token';
-import { AppContextService as ServerAppContextService } from '../app-context';
-import { JsonConfigService as ServerJsonConfigService } from '../json-config';
+import { History } from '../common';
+import { MicroManage } from '../micro';
+import { AppContextService as ServerAppContextService } from '../providers/app-context';
+import { JsonConfigService as ServerJsonConfigService } from '../providers/json-config';
+import { RESOURCE } from '../token';
 export class Platform {
     constructor(platformInjector) {
         this.platformInjector = platformInjector;
