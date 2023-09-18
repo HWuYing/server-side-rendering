@@ -89,14 +89,15 @@ var Platform = /** @class */ (function () {
         });
     };
     Platform.prototype.runRender = function (injector, options, render) {
+        var _a;
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             var application;
-            return tslib_1.__generator(this, function (_a) {
-                switch (_a.label) {
+            return tslib_1.__generator(this, function (_b) {
+                switch (_b.label) {
                     case 0: return [4 /*yield*/, injector.get(token_1.APPLICATION_TOKEN)];
                     case 1:
-                        application = _a.sent();
-                        return [2 /*return*/, (render || application.bootstrapRender).call(application, injector, options)];
+                        application = _b.sent();
+                        return [2 /*return*/, (_a = (render || application.bootstrapRender)) === null || _a === void 0 ? void 0 : _a.call(application, injector, options)];
                 }
             });
         });
