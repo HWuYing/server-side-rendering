@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Prov = exports.Input = exports.Application = exports.PLATFORM_SCOPE = exports.dynamicPlatform = void 0;
+exports.Prov = exports.Input = exports.ApplicationPlugin = exports.Application = exports.PLATFORM_SCOPE = exports.dynamicPlatform = void 0;
 var platform_1 = require("@fm/core/platform");
 var token_1 = require("@fm/core/token");
 var runtime_1 = require("@fm/csr/platform/runtime");
@@ -21,5 +21,6 @@ var application_1 = require("@fm/core/platform/application");
 Object.defineProperty(exports, "PLATFORM_SCOPE", { enumerable: true, get: function () { return application_1.PLATFORM_SCOPE; } });
 var runtime_2 = require("@fm/csr/platform/runtime");
 Object.defineProperty(exports, "Application", { enumerable: true, get: function () { return runtime_2.Application; } });
+Object.defineProperty(exports, "ApplicationPlugin", { enumerable: true, get: function () { return runtime_2.ApplicationPlugin; } });
 Object.defineProperty(exports, "Input", { enumerable: true, get: function () { return runtime_2.Input; } });
 Object.defineProperty(exports, "Prov", { enumerable: true, get: function () { return runtime_2.Prov; } });

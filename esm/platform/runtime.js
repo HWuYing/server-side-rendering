@@ -11,4 +11,4 @@ const createPlatform = createPlatformFactory(null, _CORE_PLATFORM_PROVIDERS);
 export const dynamicPlatform = (providers = []) => createPlatform(applicationContext, providers);
 applicationContext.registerStart(() => dynamicPlatform().bootstrapRender(applicationContext.providers));
 export { PLATFORM_SCOPE } from '@fm/core/platform/application';
-export { Application, Input, Prov } from '@fm/csr/platform/runtime';
+export { Application, ApplicationPlugin, Input, Prov } from '@fm/csr/platform/runtime';

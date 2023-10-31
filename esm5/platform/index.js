@@ -94,7 +94,7 @@ var Platform = /** @class */ (function () {
                     case 0: return [4 /*yield*/, injector.get(APPLICATION_TOKEN)];
                     case 1:
                         application = _b.sent();
-                        return [2 /*return*/, (_a = (render || application.bootstrapRender)) === null || _a === void 0 ? void 0 : _a.call(application, injector, options)];
+                        return [2 /*return*/, (_a = (render || application.main)) === null || _a === void 0 ? void 0 : _a.call(application, injector, options)];
                 }
             });
         });

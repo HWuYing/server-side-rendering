@@ -68,7 +68,7 @@ export class Platform {
         var _a;
         return __awaiter(this, void 0, void 0, function* () {
             const application = yield injector.get(APPLICATION_TOKEN);
-            return (_a = (render || application.bootstrapRender)) === null || _a === void 0 ? void 0 : _a.call(application, injector, options);
+            return (_a = (render || application.main)) === null || _a === void 0 ? void 0 : _a.call(application, injector, options);
         });
     }
     parseParams(providers, render) {
