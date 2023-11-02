@@ -1,10 +1,10 @@
-import { __assign, __awaiter, __generator, __rest, __spreadArray } from "tslib";
+import { __assign, __awaiter, __decorate, __generator, __metadata, __rest, __spreadArray } from "tslib";
 import { HttpHandler, HttpInterceptingHandler } from '@fm/core/common/http';
 import { serializableAssets } from '@fm/core/micro';
 import { APP_CONTEXT, AppContextService } from '@fm/core/providers/app-context';
 import { JsonConfigService } from '@fm/core/providers/json-config';
 import { APPLICATION_TOKEN, HISTORY } from '@fm/core/token';
-import { Injector } from '@fm/di';
+import { Inject, Injector } from '@fm/di';
 import { lastValueFrom, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { History } from '../common';
@@ -13,8 +13,7 @@ import { AppContextService as ServerAppContextService } from '../providers/app-c
 import { JsonConfigService as ServerJsonConfigService } from '../providers/json-config';
 import { RESOURCE } from '../token';
 var Platform = /** @class */ (function () {
-    function Platform(platformInjector) {
-        this.platformInjector = platformInjector;
+    function Platform() {
     }
     Platform.prototype.bootstrapRender = function (additionalProviders, render) {
         var _a = this.parseParams(additionalProviders, render), providers = _a[0], _render = _a[1];
@@ -28,7 +27,7 @@ var Platform = /** @class */ (function () {
                 switch (_e.label) {
                     case 0:
                         request = global.request, resource = global.resource, _global = __rest(global, ["request", "resource"]);
-                        context = { isMicro: isMicro, request: request, resource: resource.cache, renderSSR: true, location: this.getLocation(request, isMicro) };
+                        context = { isMicro: isMicro, request: request, renderSSR: true, location: this.getLocation(request, isMicro) };
                         injector = this.beforeBootstrapRender(context, __spreadArray(__spreadArray([], providers, true), [
                             { provide: RESOURCE, useValue: resource },
                             { provide: HISTORY, useClass: History }
@@ -103,9 +102,14 @@ var Platform = /** @class */ (function () {
         return typeof providers === 'function' ? [[], providers] : [__spreadArray([], providers, true), render];
     };
     Platform.prototype.getLocation = function (request, isMicro) {
-        var _a = request.params.pathname, pathname = _a === void 0 ? '' : _a;
-        return { pathname: isMicro ? "".concat(pathname) : request.path, search: '?' };
+        var _a = request.params.pathname, pathname = _a === void 0 ? '' : _a, query = request.query;
+        var search = "?".concat(Object.keys(query).map(function (key) { return "".concat(key, "=").concat(query[key]); }).join('&'));
+        return { pathname: isMicro ? "".concat(pathname) : request.path, search: search };
     };
+    __decorate([
+        Inject(Injector),
+        __metadata("design:type", Injector)
+    ], Platform.prototype, "platformInjector", void 0);
     return Platform;
 }());
 export { Platform };

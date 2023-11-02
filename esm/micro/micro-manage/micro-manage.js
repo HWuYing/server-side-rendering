@@ -13,8 +13,9 @@ let MicroManage = class MicroManage {
         this.resource = this.injector.get(RESOURCE);
     }
     bootstrapMicro(microName) {
-        const { location: { pathname } } = this.injector.get(HISTORY);
-        const subject = this.fetchRequire(this.resource.getMicroPath(microName, pathname), { headers: { 'server-side-render': true } }).pipe(catchError((error) => of({ html: `${microName}<br/>${error.message}`, styles: '', error })), tap((microResult) => this.checkRedirect(microResult)), switchMap((microResult) => this.readLinkToStyles(microName, microResult)), map((microResult) => ({ microResult: this.createMicroTag(microName, microResult), microName })), shareReplay(1));
+        const { location: { pathname, search } } = this.injector.get(HISTORY);
+        const url = this.resource.getMicroPath(microName, pathname) + search;
+        const subject = this.fetchRequire(url, { headers: { 'server-side-render': true } }).pipe(catchError((error) => of({ html: `${microName}<br/>${error.message}`, styles: '', error })), tap((microResult) => this.checkRedirect(microResult)), switchMap((microResult) => this.readLinkToStyles(microName, microResult)), map((microResult) => ({ microResult: this.createMicroTag(microName, microResult), microName })), shareReplay(1));
         subject.subscribe({ next: () => void (0), error: () => void (0) });
         this.appContext.registryMicroMiddler(() => subject);
         return of(null);

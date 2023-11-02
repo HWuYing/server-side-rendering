@@ -1,10 +1,9 @@
 import { __decorate, __metadata } from "tslib";
-import { Injectable, Injector } from '@fm/di';
+import { Injectable } from '@fm/di';
 import { AppContextService } from '../../providers/app-context';
 var History = /** @class */ (function () {
-    function History(injector) {
-        this.injector = injector;
-        this.appContext = this.injector.get(AppContextService);
+    function History(appContext) {
+        this.appContext = appContext;
     }
     History.prototype.push = function () {
         void (0);
@@ -31,7 +30,7 @@ var History = /** @class */ (function () {
     });
     History = __decorate([
         Injectable(),
-        __metadata("design:paramtypes", [Injector])
+        __metadata("design:paramtypes", [AppContextService])
     ], History);
     return History;
 }());

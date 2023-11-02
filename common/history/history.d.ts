@@ -1,9 +1,8 @@
-import { Injector } from '@fm/di';
+import { AppContextService } from '../../providers/app-context';
 export declare class History {
-    private injector;
-    private _redirect;
     private appContext;
-    constructor(injector: Injector);
+    private _redirect;
+    constructor(appContext: AppContextService);
     push(): void;
     replace(url: string): void;
     listen(): () => void;

@@ -1,10 +1,9 @@
 import { createPlatformFactory } from '@fm/core/platform';
 import { PLATFORM } from '@fm/core/token';
 import { applicationContext } from '@fm/csr/platform/runtime';
-import { Injector } from '@fm/di';
 import { Platform } from './index';
 const _CORE_PLATFORM_PROVIDERS = [
-    { provide: Platform, deps: [Injector] },
+    Platform,
     { provide: PLATFORM, useExisting: Platform }
 ];
 const createPlatform = createPlatformFactory(null, _CORE_PLATFORM_PROVIDERS);

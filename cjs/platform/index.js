@@ -16,8 +16,7 @@ var app_context_2 = require("../providers/app-context");
 var json_config_2 = require("../providers/json-config");
 var token_2 = require("../token");
 var Platform = /** @class */ (function () {
-    function Platform(platformInjector) {
-        this.platformInjector = platformInjector;
+    function Platform() {
     }
     Platform.prototype.bootstrapRender = function (additionalProviders, render) {
         var _a = this.parseParams(additionalProviders, render), providers = _a[0], _render = _a[1];
@@ -31,7 +30,7 @@ var Platform = /** @class */ (function () {
                 switch (_e.label) {
                     case 0:
                         request = global.request, resource = global.resource, _global = tslib_1.__rest(global, ["request", "resource"]);
-                        context = { isMicro: isMicro, request: request, resource: resource.cache, renderSSR: true, location: this.getLocation(request, isMicro) };
+                        context = { isMicro: isMicro, request: request, renderSSR: true, location: this.getLocation(request, isMicro) };
                         injector = this.beforeBootstrapRender(context, tslib_1.__spreadArray(tslib_1.__spreadArray([], providers, true), [
                             { provide: token_2.RESOURCE, useValue: resource },
                             { provide: token_1.HISTORY, useClass: common_1.History }
@@ -106,9 +105,14 @@ var Platform = /** @class */ (function () {
         return typeof providers === 'function' ? [[], providers] : [tslib_1.__spreadArray([], providers, true), render];
     };
     Platform.prototype.getLocation = function (request, isMicro) {
-        var _a = request.params.pathname, pathname = _a === void 0 ? '' : _a;
-        return { pathname: isMicro ? "".concat(pathname) : request.path, search: '?' };
+        var _a = request.params.pathname, pathname = _a === void 0 ? '' : _a, query = request.query;
+        var search = "?".concat(Object.keys(query).map(function (key) { return "".concat(key, "=").concat(query[key]); }).join('&'));
+        return { pathname: isMicro ? "".concat(pathname) : request.path, search: search };
     };
+    tslib_1.__decorate([
+        (0, di_1.Inject)(di_1.Injector),
+        tslib_1.__metadata("design:type", di_1.Injector)
+    ], Platform.prototype, "platformInjector", void 0);
     return Platform;
 }());
 exports.Platform = Platform;

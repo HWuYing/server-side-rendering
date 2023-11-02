@@ -14,8 +14,9 @@ var MicroManage = /** @class */ (function () {
     }
     MicroManage.prototype.bootstrapMicro = function (microName) {
         var _this = this;
-        var pathname = this.injector.get(HISTORY).location.pathname;
-        var subject = this.fetchRequire(this.resource.getMicroPath(microName, pathname), { headers: { 'server-side-render': true } }).pipe(catchError(function (error) { return of({ html: "".concat(microName, "<br/>").concat(error.message), styles: '', error: error }); }), tap(function (microResult) { return _this.checkRedirect(microResult); }), switchMap(function (microResult) { return _this.readLinkToStyles(microName, microResult); }), map(function (microResult) { return ({ microResult: _this.createMicroTag(microName, microResult), microName: microName }); }), shareReplay(1));
+        var _a = this.injector.get(HISTORY).location, pathname = _a.pathname, search = _a.search;
+        var url = this.resource.getMicroPath(microName, pathname) + search;
+        var subject = this.fetchRequire(url, { headers: { 'server-side-render': true } }).pipe(catchError(function (error) { return of({ html: "".concat(microName, "<br/>").concat(error.message), styles: '', error: error }); }), tap(function (microResult) { return _this.checkRedirect(microResult); }), switchMap(function (microResult) { return _this.readLinkToStyles(microName, microResult); }), map(function (microResult) { return ({ microResult: _this.createMicroTag(microName, microResult), microName: microName }); }), shareReplay(1));
         subject.subscribe({ next: function () { return void (0); }, error: function () { return void (0); } });
         this.appContext.registryMicroMiddler(function () { return subject; });
         return of(null);

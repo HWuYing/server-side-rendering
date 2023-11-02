@@ -25,7 +25,6 @@ export interface RenderInterface {
     }>;
 }
 export interface ResourceOptions {
-    proxyHost: string;
     microName: string;
     readonly fetch: Fetch;
     readonly innerHeadFlag: string;

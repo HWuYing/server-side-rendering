@@ -22,15 +22,10 @@ var Resource = /** @class */ (function () {
     Resource.prototype.proxyFetch = function (req, init) {
         if (init === void 0) { init = {}; }
         return __awaiter(this, void 0, void 0, function () {
-            var url, res;
+            var res;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        url = req;
-                        if (typeof url === 'string') {
-                            url = /^http(s?)/.test(url) ? url : "".concat(this.options.proxyHost, "/").concat(url.replace(/^[/]+/, ''));
-                        }
-                        return [4 /*yield*/, this.options.fetch(url, init)];
+                    case 0: return [4 /*yield*/, this.options.fetch(req, init)];
                     case 1:
                         res = _a.sent();
                         if ([404, 504].includes(res.status))

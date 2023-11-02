@@ -1,10 +1,10 @@
-import { __awaiter, __rest } from "tslib";
+import { __awaiter, __decorate, __metadata, __rest } from "tslib";
 import { HttpHandler, HttpInterceptingHandler } from '@fm/core/common/http';
 import { serializableAssets } from '@fm/core/micro';
 import { APP_CONTEXT, AppContextService } from '@fm/core/providers/app-context';
 import { JsonConfigService } from '@fm/core/providers/json-config';
 import { APPLICATION_TOKEN, HISTORY } from '@fm/core/token';
-import { Injector } from '@fm/di';
+import { Inject, Injector } from '@fm/di';
 import { lastValueFrom, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { History } from '../common';
@@ -13,9 +13,6 @@ import { AppContextService as ServerAppContextService } from '../providers/app-c
 import { JsonConfigService as ServerJsonConfigService } from '../providers/json-config';
 import { RESOURCE } from '../token';
 export class Platform {
-    constructor(platformInjector) {
-        this.platformInjector = platformInjector;
-    }
     bootstrapRender(additionalProviders, render) {
         const [providers, _render] = this.parseParams(additionalProviders, render);
         registryRender(this.proxyRender.bind(this, providers, _render));
@@ -23,7 +20,7 @@ export class Platform {
     proxyRender(providers, render, global, isMicro = false) {
         return __awaiter(this, void 0, void 0, function* () {
             const { request, resource } = global, _global = __rest(global, ["request", "resource"]);
-            const context = { isMicro, request, resource: resource.cache, renderSSR: true, location: this.getLocation(request, isMicro) };
+            const context = { isMicro, request, renderSSR: true, location: this.getLocation(request, isMicro) };
             const injector = this.beforeBootstrapRender(context, [
                 ...providers,
                 { provide: RESOURCE, useValue: resource },
@@ -75,7 +72,12 @@ export class Platform {
         return typeof providers === 'function' ? [[], providers] : [[...providers], render];
     }
     getLocation(request, isMicro) {
-        const { pathname = '' } = request.params;
-        return { pathname: isMicro ? `${pathname}` : request.path, search: '?' };
+        const { params: { pathname = '' }, query } = request;
+        const search = `?${Object.keys(query).map((key) => `${key}=${query[key]}`).join('&')}`;
+        return { pathname: isMicro ? `${pathname}` : request.path, search };
     }
 }
+__decorate([
+    Inject(Injector),
+    __metadata("design:type", Injector)
+], Platform.prototype, "platformInjector", void 0);

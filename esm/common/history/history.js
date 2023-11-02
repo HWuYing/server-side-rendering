@@ -1,10 +1,9 @@
 import { __decorate, __metadata } from "tslib";
-import { Injectable, Injector } from '@fm/di';
+import { Injectable } from '@fm/di';
 import { AppContextService } from '../../providers/app-context';
 let History = class History {
-    constructor(injector) {
-        this.injector = injector;
-        this.appContext = this.injector.get(AppContextService);
+    constructor(appContext) {
+        this.appContext = appContext;
     }
     push() {
         void (0);
@@ -24,6 +23,6 @@ let History = class History {
 };
 History = __decorate([
     Injectable(),
-    __metadata("design:paramtypes", [Injector])
+    __metadata("design:paramtypes", [AppContextService])
 ], History);
 export { History };

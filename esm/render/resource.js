@@ -21,11 +21,7 @@ export class Resource {
     }
     proxyFetch(req, init = {}) {
         return __awaiter(this, void 0, void 0, function* () {
-            let url = req;
-            if (typeof url === 'string') {
-                url = /^http(s?)/.test(url) ? url : `${this.options.proxyHost}/${url.replace(/^[/]+/, '')}`;
-            }
-            const res = yield this.options.fetch(url, init);
+            const res = yield this.options.fetch(req, init);
             if ([404, 504].includes(res.status))
                 throw new Error(`${res.status}: ${res.statusText}`);
             return res;

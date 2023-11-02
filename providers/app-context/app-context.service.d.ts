@@ -1,5 +1,5 @@
 import { AppContextService as SharedAppContextService } from '@fm/core';
-import { Fetch } from '@fm/core/common/http';
+import type { Fetch } from '@fm/core/common/http';
 import { Injector } from '@fm/di';
 import { Observable } from 'rxjs';
 type MicroMiddleware = () => Observable<any>;

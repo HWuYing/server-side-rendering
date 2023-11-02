@@ -5,9 +5,8 @@ var tslib_1 = require("tslib");
 var di_1 = require("@fm/di");
 var app_context_1 = require("../../providers/app-context");
 var History = /** @class */ (function () {
-    function History(injector) {
-        this.injector = injector;
-        this.appContext = this.injector.get(app_context_1.AppContextService);
+    function History(appContext) {
+        this.appContext = appContext;
     }
     History.prototype.push = function () {
         void (0);
@@ -34,7 +33,7 @@ var History = /** @class */ (function () {
     });
     History = tslib_1.__decorate([
         (0, di_1.Injectable)(),
-        tslib_1.__metadata("design:paramtypes", [di_1.Injector])
+        tslib_1.__metadata("design:paramtypes", [app_context_1.AppContextService])
     ], History);
     return History;
 }());

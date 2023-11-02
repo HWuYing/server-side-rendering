@@ -4,10 +4,9 @@ exports.Prov = exports.Input = exports.ApplicationPlugin = exports.Application =
 var platform_1 = require("@fm/core/platform");
 var token_1 = require("@fm/core/token");
 var runtime_1 = require("@fm/csr/platform/runtime");
-var di_1 = require("@fm/di");
 var index_1 = require("./index");
 var _CORE_PLATFORM_PROVIDERS = [
-    { provide: index_1.Platform, deps: [di_1.Injector] },
+    index_1.Platform,
     { provide: token_1.PLATFORM, useExisting: index_1.Platform }
 ];
 var createPlatform = (0, platform_1.createPlatformFactory)(null, _CORE_PLATFORM_PROVIDERS);
