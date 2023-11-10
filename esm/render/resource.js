@@ -37,7 +37,7 @@ export class Resource {
     }
     readStaticFile(url) {
         let fileCache = this.filesCache[url];
-        if (!fileCache) {
+        if (!fileCache || this.isDevelopment) {
             const filePath = this.options.getStaticPath(url);
             const source = filePath && fs.existsSync(filePath) ? fs.readFileSync(filePath, 'utf-8') : '{}';
             fileCache = { type: 'file-static', source: JSON.parse(source) };
