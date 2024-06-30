@@ -13,12 +13,11 @@ import { AppContextService as ServerAppContextService } from '../providers/app-c
 import { JsonConfigService as ServerJsonConfigService } from '../providers/json-config';
 import { RESOURCE } from '../token';
 export class Platform {
-    bootstrapRender(additionalProviders, render) {
-        const [providers, _render] = this.parseParams(additionalProviders, render);
-        registryRender(this.proxyRender.bind(this, providers, _render));
+    bootstrapRender(providers = []) {
+        registryRender(this.proxyRender.bind(this, providers));
     }
-    proxyRender(providers, render, global, isMicro = false) {
-        return __awaiter(this, void 0, void 0, function* () {
+    proxyRender(providers_1, global_1) {
+        return __awaiter(this, arguments, void 0, function* (providers, global, isMicro = false) {
             const { request, resource } = global, _global = __rest(global, ["request", "resource"]);
             const context = { isMicro, request, renderSSR: true, location: this.getLocation(request, isMicro) };
             const injector = this.beforeBootstrapRender(context, [
@@ -28,7 +27,7 @@ export class Platform {
             ]);
             const history = injector.get(HISTORY);
             const { js = [], links = [] } = serializableAssets(resource.readAssetsSync());
-            const { html, styles } = yield this.runRender(injector, Object.assign({ request }, _global), render);
+            const { html, styles } = yield this.runRender(injector, Object.assign({ request }, _global));
             const executeResult = yield this.executeMicroMiddleware(injector, { html, styles, js, links, microTags: [], microFetchData: [] });
             executeResult.fetchData = injector.get(AppContextService).getPageFileSource();
             injector.destroy();
@@ -61,15 +60,12 @@ export class Platform {
             return lastValueFrom(appContext.getPageMicroMiddleware().reduce((input, middleware) => (input.pipe(switchMap(this.mergeMicroToSSR(middleware)))), of(options)));
         });
     }
-    runRender(injector, options, render) {
-        var _a;
+    runRender(injector, options) {
         return __awaiter(this, void 0, void 0, function* () {
+            var _a;
             const application = yield injector.get(APPLICATION_TOKEN);
-            return (_a = (render || application.main)) === null || _a === void 0 ? void 0 : _a.call(application, injector, options);
+            return (_a = application.main) === null || _a === void 0 ? void 0 : _a.call(application, injector, options);
         });
-    }
-    parseParams(providers, render) {
-        return typeof providers === 'function' ? [[], providers] : [[...providers], render];
     }
     getLocation(request, isMicro) {
         const { params: { pathname = '' }, query } = request;

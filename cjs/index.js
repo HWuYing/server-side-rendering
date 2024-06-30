@@ -1,14 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Prov = exports.PLATFORM_SCOPE = exports.Input = exports.dynamicPlatform = exports.ApplicationPlugin = exports.Application = exports.Platform = void 0;
+exports.runtimeInjector = exports.Register = exports.Prov = exports.PLATFORM_SCOPE = exports.Input = exports.createRegisterLoader = exports.ApplicationPlugin = exports.Application = exports.Platform = void 0;
 var tslib_1 = require("tslib");
 var platform_1 = require("./platform");
 Object.defineProperty(exports, "Platform", { enumerable: true, get: function () { return platform_1.Platform; } });
 var runtime_1 = require("./platform/runtime");
 Object.defineProperty(exports, "Application", { enumerable: true, get: function () { return runtime_1.Application; } });
 Object.defineProperty(exports, "ApplicationPlugin", { enumerable: true, get: function () { return runtime_1.ApplicationPlugin; } });
-Object.defineProperty(exports, "dynamicPlatform", { enumerable: true, get: function () { return runtime_1.dynamicPlatform; } });
+Object.defineProperty(exports, "createRegisterLoader", { enumerable: true, get: function () { return runtime_1.createRegisterLoader; } });
 Object.defineProperty(exports, "Input", { enumerable: true, get: function () { return runtime_1.Input; } });
 Object.defineProperty(exports, "PLATFORM_SCOPE", { enumerable: true, get: function () { return runtime_1.PLATFORM_SCOPE; } });
 Object.defineProperty(exports, "Prov", { enumerable: true, get: function () { return runtime_1.Prov; } });
+Object.defineProperty(exports, "Register", { enumerable: true, get: function () { return runtime_1.Register; } });
+Object.defineProperty(exports, "runtimeInjector", { enumerable: true, get: function () { return runtime_1.runtimeInjector; } });
 tslib_1.__exportStar(require("@fm/core"), exports);

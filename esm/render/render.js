@@ -44,8 +44,8 @@ export class Render {
         });
     }
     render(request) {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
+            var _a;
             const result = yield this._render(request);
             const { isDevelopment, innerHtmlFlag, innerHeadFlag } = this.resource;
             const { status, redirectUrl, js = [], links = [], styles, microTags = [], microFetchData = [] } = result;

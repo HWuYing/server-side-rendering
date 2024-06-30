@@ -19,10 +19,10 @@ var Resource = /** @class */ (function () {
         }
         return this.htmlTemplate;
     };
-    Resource.prototype.proxyFetch = function (req, init) {
-        if (init === void 0) { init = {}; }
-        return __awaiter(this, void 0, void 0, function () {
+    Resource.prototype.proxyFetch = function (req_1) {
+        return __awaiter(this, arguments, void 0, function (req, init) {
             var res;
+            if (init === void 0) { init = {}; }
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.options.fetch(req, init)];

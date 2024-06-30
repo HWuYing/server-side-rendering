@@ -19,8 +19,8 @@ export class Resource {
         }
         return this.htmlTemplate;
     }
-    proxyFetch(req, init = {}) {
-        return __awaiter(this, void 0, void 0, function* () {
+    proxyFetch(req_1) {
+        return __awaiter(this, arguments, void 0, function* (req, init = {}) {
             const res = yield this.options.fetch(req, init);
             if ([404, 504].includes(res.status))
                 throw new Error(`${res.status}: ${res.statusText}`);

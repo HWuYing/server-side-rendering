@@ -62,19 +62,19 @@ var Render = /** @class */ (function () {
         });
     };
     Render.prototype.render = function (request) {
-        var _a;
         return tslib_1.__awaiter(this, void 0, void 0, function () {
-            var result, _b, isDevelopment, innerHtmlFlag, innerHeadFlag, status, redirectUrl, _c, js, _d, links, styles, _e, microTags, _f, microFetchData, fetchData, microData, chunkCss, chunkLinks, headContent, html;
+            var result, _a, isDevelopment, innerHtmlFlag, innerHeadFlag, status, redirectUrl, _b, js, _c, links, styles, _d, microTags, _e, microFetchData, fetchData, microData, chunkCss, chunkLinks, headContent, html;
+            var _f;
             return tslib_1.__generator(this, function (_g) {
                 switch (_g.label) {
                     case 0: return [4 /*yield*/, this._render(request)];
                     case 1:
                         result = _g.sent();
-                        _b = this.resource, isDevelopment = _b.isDevelopment, innerHtmlFlag = _b.innerHtmlFlag, innerHeadFlag = _b.innerHeadFlag;
-                        status = result.status, redirectUrl = result.redirectUrl, _c = result.js, js = _c === void 0 ? [] : _c, _d = result.links, links = _d === void 0 ? [] : _d, styles = result.styles, _e = result.microTags, microTags = _e === void 0 ? [] : _e, _f = result.microFetchData, microFetchData = _f === void 0 ? [] : _f;
+                        _a = this.resource, isDevelopment = _a.isDevelopment, innerHtmlFlag = _a.innerHtmlFlag, innerHeadFlag = _a.innerHeadFlag;
+                        status = result.status, redirectUrl = result.redirectUrl, _b = result.js, js = _b === void 0 ? [] : _b, _c = result.links, links = _c === void 0 ? [] : _c, styles = result.styles, _d = result.microTags, microTags = _d === void 0 ? [] : _d, _e = result.microFetchData, microFetchData = _e === void 0 ? [] : _e;
                         fetchData = this.createScriptTemplate('fetch-static', "var fetchCacheData = ".concat(result.fetchData, ";"));
                         microData = this.createScriptTemplate('micro-fetch-static', "var microFetchData = ".concat(JSON.stringify(microFetchData), ";"));
-                        chunkCss = isDevelopment ? links : ((_a = this.resource.readAssetsSync()['chunk']) === null || _a === void 0 ? void 0 : _a.css) || [];
+                        chunkCss = isDevelopment ? links : ((_f = this.resource.readAssetsSync()['chunk']) === null || _f === void 0 ? void 0 : _f.css) || [];
                         chunkLinks = chunkCss.map(function (href) { return "<link href=\"".concat(href, "\" rel=\"stylesheet\">"); }).join('');
                         headContent = "".concat(chunkLinks).concat(styles).concat(fetchData).concat(microData).concat(microTags.join(''));
                         if (isDevelopment) {

@@ -15,14 +15,14 @@ import { RESOURCE } from '../token';
 var Platform = /** @class */ (function () {
     function Platform() {
     }
-    Platform.prototype.bootstrapRender = function (additionalProviders, render) {
-        var _a = this.parseParams(additionalProviders, render), providers = _a[0], _render = _a[1];
-        registryRender(this.proxyRender.bind(this, providers, _render));
+    Platform.prototype.bootstrapRender = function (providers) {
+        if (providers === void 0) { providers = []; }
+        registryRender(this.proxyRender.bind(this, providers));
     };
-    Platform.prototype.proxyRender = function (providers, render, global, isMicro) {
-        if (isMicro === void 0) { isMicro = false; }
-        return __awaiter(this, void 0, void 0, function () {
+    Platform.prototype.proxyRender = function (providers_1, global_1) {
+        return __awaiter(this, arguments, void 0, function (providers, global, isMicro) {
             var request, resource, _global, context, injector, history, _a, _b, js, _c, links, _d, html, styles, executeResult;
+            if (isMicro === void 0) { isMicro = false; }
             return __generator(this, function (_e) {
                 switch (_e.label) {
                     case 0:
@@ -34,7 +34,7 @@ var Platform = /** @class */ (function () {
                         ], false));
                         history = injector.get(HISTORY);
                         _a = serializableAssets(resource.readAssetsSync()), _b = _a.js, js = _b === void 0 ? [] : _b, _c = _a.links, links = _c === void 0 ? [] : _c;
-                        return [4 /*yield*/, this.runRender(injector, __assign({ request: request }, _global), render)];
+                        return [4 /*yield*/, this.runRender(injector, __assign({ request: request }, _global))];
                     case 1:
                         _d = _e.sent(), html = _d.html, styles = _d.styles;
                         return [4 /*yield*/, this.executeMicroMiddleware(injector, { html: html, styles: styles, js: js, links: links, microTags: [], microFetchData: [] })];
@@ -84,22 +84,19 @@ var Platform = /** @class */ (function () {
             });
         });
     };
-    Platform.prototype.runRender = function (injector, options, render) {
-        var _a;
+    Platform.prototype.runRender = function (injector, options) {
         return __awaiter(this, void 0, void 0, function () {
             var application;
+            var _a;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0: return [4 /*yield*/, injector.get(APPLICATION_TOKEN)];
                     case 1:
                         application = _b.sent();
-                        return [2 /*return*/, (_a = (render || application.main)) === null || _a === void 0 ? void 0 : _a.call(application, injector, options)];
+                        return [2 /*return*/, (_a = application.main) === null || _a === void 0 ? void 0 : _a.call(application, injector, options)];
                 }
             });
         });
-    };
-    Platform.prototype.parseParams = function (providers, render) {
-        return typeof providers === 'function' ? [[], providers] : [__spreadArray([], providers, true), render];
     };
     Platform.prototype.getLocation = function (request, isMicro) {
         var _a = request.params.pathname, pathname = _a === void 0 ? '' : _a, query = request.query;
