@@ -13,4 +13,4 @@ Object.defineProperty(exports, "PLATFORM_SCOPE", { enumerable: true, get: functi
 Object.defineProperty(exports, "Prov", { enumerable: true, get: function () { return runtime_1.Prov; } });
 Object.defineProperty(exports, "Register", { enumerable: true, get: function () { return runtime_1.Register; } });
 Object.defineProperty(exports, "runtimeInjector", { enumerable: true, get: function () { return runtime_1.runtimeInjector; } });
-tslib_1.__exportStar(require("@fm/core"), exports);
+tslib_1.__exportStar(require("@hwy-fm/core"), exports);

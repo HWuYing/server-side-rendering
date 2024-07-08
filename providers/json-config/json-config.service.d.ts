@@ -1,4 +1,4 @@
-import { JsonConfigService as ShareJsonConfigService } from '@fm/core';
+import { JsonConfigService as ShareJsonConfigService } from '@hwy-fm/core';
 import { Observable } from 'rxjs';
 import { AppContextService } from '../app-context';
 export declare class JsonConfigService extends ShareJsonConfigService {

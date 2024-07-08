@@ -1,4 +1,4 @@
-import { Provider } from '@fm/di';
+import { Provider } from '@hwy-fm/di';
 export declare class Platform {
     private platformInjector;
     bootstrapRender(providers?: Provider[]): void;

@@ -1,6 +1,6 @@
 import { __decorate, __extends, __metadata } from "tslib";
-import { JsonConfigService as ShareJsonConfigService } from '@fm/core';
-import { Inject, Injectable } from '@fm/di';
+import { JsonConfigService as ShareJsonConfigService } from '@hwy-fm/core';
+import { Inject, Injectable } from '@hwy-fm/di';
 import { cloneDeep } from 'lodash';
 import { of } from 'rxjs';
 import { AppContextService } from '../app-context';

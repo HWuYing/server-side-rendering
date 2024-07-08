@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.JsonConfigService = void 0;
 var tslib_1 = require("tslib");
-var core_1 = require("@fm/core");
-var di_1 = require("@fm/di");
+var core_1 = require("@hwy-fm/core");
+var di_1 = require("@hwy-fm/di");
 var lodash_1 = require("lodash");
 var rxjs_1 = require("rxjs");
 var app_context_1 = require("../app-context");

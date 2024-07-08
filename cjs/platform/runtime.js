@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Application = exports.runtimeInjector = exports.Register = exports.Prov = exports.Input = exports.createRegisterLoader = exports.ApplicationPlugin = exports.PLATFORM_SCOPE = void 0;
-var platform_1 = require("@fm/core/platform");
-var decorator_1 = require("@fm/core/platform/decorator");
-var token_1 = require("@fm/core/token");
+var platform_1 = require("@hwy-fm/core/platform");
+var decorator_1 = require("@hwy-fm/core/platform/decorator");
+var token_1 = require("@hwy-fm/core/token");
 var index_1 = require("./index");
-var platform_2 = require("@fm/core/platform");
+var platform_2 = require("@hwy-fm/core/platform");
 Object.defineProperty(exports, "PLATFORM_SCOPE", { enumerable: true, get: function () { return platform_2.PLATFORM_SCOPE; } });
-var runtime_1 = require("@fm/csr/platform/runtime");
+var runtime_1 = require("@hwy-fm/csr/platform/runtime");
 Object.defineProperty(exports, "ApplicationPlugin", { enumerable: true, get: function () { return runtime_1.ApplicationPlugin; } });
 Object.defineProperty(exports, "createRegisterLoader", { enumerable: true, get: function () { return runtime_1.createRegisterLoader; } });
 Object.defineProperty(exports, "Input", { enumerable: true, get: function () { return runtime_1.Input; } });

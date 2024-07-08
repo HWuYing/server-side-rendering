@@ -1,5 +1,5 @@
 import { __decorate, __metadata } from "tslib";
-import { Injectable } from '@fm/di';
+import { Injectable } from '@hwy-fm/di';
 import { AppContextService } from '../../providers/app-context';
 let History = class History {
     constructor(appContext) {

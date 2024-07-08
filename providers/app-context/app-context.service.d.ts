@@ -1,6 +1,6 @@
-import { AppContextService as SharedAppContextService } from '@fm/core';
-import type { Fetch } from '@fm/core/common/http';
-import { Injector } from '@fm/di';
+import { AppContextService as SharedAppContextService } from '@hwy-fm/core';
+import type { Fetch } from '@hwy-fm/core/common/http';
+import { Injector } from '@hwy-fm/di';
 import { Observable } from 'rxjs';
 type MicroMiddleware = () => Observable<any>;
 export declare class AppContextService extends SharedAppContextService {

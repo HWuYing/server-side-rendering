@@ -1,5 +1,5 @@
-import { MicroManageInterface } from '@fm/core/micro';
-import { Injector } from '@fm/di';
+import { MicroManageInterface } from '@hwy-fm/core/micro';
+import { Injector } from '@hwy-fm/di';
 import { Observable } from 'rxjs';
 export declare class MicroManage implements MicroManageInterface {
     private injector;

@@ -1,10 +1,10 @@
 import { __assign, __awaiter, __decorate, __generator, __metadata, __rest, __spreadArray } from "tslib";
-import { HttpHandler, HttpInterceptingHandler } from '@fm/core/common/http';
-import { serializableAssets } from '@fm/core/micro';
-import { APP_CONTEXT, AppContextService } from '@fm/core/providers/app-context';
-import { JsonConfigService } from '@fm/core/providers/json-config';
-import { APPLICATION_TOKEN, HISTORY } from '@fm/core/token';
-import { Inject, Injector } from '@fm/di';
+import { HttpHandler, HttpInterceptingHandler } from '@hwy-fm/core/common/http';
+import { serializableAssets } from '@hwy-fm/core/micro';
+import { APP_CONTEXT, AppContextService } from '@hwy-fm/core/providers/app-context';
+import { JsonConfigService } from '@hwy-fm/core/providers/json-config';
+import { APPLICATION_TOKEN, HISTORY } from '@hwy-fm/core/token';
+import { Inject, Injector } from '@hwy-fm/di';
 import { lastValueFrom, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { History } from '../common';
