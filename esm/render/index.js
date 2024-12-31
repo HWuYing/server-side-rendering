@@ -1,3 +1,4 @@
 import { Render } from './render';
-export { Resource } from './resource';
-export const createSsrVm = (options) => new Render(options);
+export { Resource, SSR_FETCH, SSR_STATIC_FOLDER } from './resource';
+export { UseSSRControl } from './ssr.controller';
+export const createSsrVm = (resource) => new Render(resource);

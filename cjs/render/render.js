@@ -5,10 +5,9 @@ var tslib_1 = require("tslib");
 var fs_1 = tslib_1.__importDefault(require("fs"));
 var module_1 = require("module");
 var vm_1 = tslib_1.__importDefault(require("vm"));
-var resource_1 = require("./resource");
 var Render = /** @class */ (function () {
-    function Render(options) {
-        this.resource = new resource_1.Resource(options);
+    function Render(resource) {
+        this.resource = resource;
     }
     Render.prototype.factoryVmScript = function () {
         var _this = this;

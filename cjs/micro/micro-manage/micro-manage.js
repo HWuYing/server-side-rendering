@@ -49,8 +49,8 @@ var MicroManage = /** @class */ (function () {
         return linkSubject;
     };
     MicroManage.prototype.createMicroTag = function (microName, microResult) {
-        var html = microResult.html, styles = microResult.styles, linkToStyles = microResult.linkToStyles, _a = microResult.microTags, microTags = _a === void 0 ? [] : _a, error = microResult.error;
-        var template = error ? '' : (0, core_1.createMicroElementTemplate)(microName, { initHtml: html, initStyle: styles, linkToStyles: linkToStyles });
+        var html = microResult.html, styles = microResult.styles, linkToStyles = microResult.linkToStyles, _a = microResult.microTags, microTags = _a === void 0 ? [] : _a;
+        var template = (0, core_1.createMicroElementTemplate)(microName, { initHtml: html, initStyle: styles, linkToStyles: linkToStyles });
         microTags.push((0, core_1.templateZip)("<script id=\"create-".concat(microName, "-tag\">{template}\n          (function() {\n            const script = document.getElementById('create-").concat(microName, "-tag');\n            script.parentNode.removeChild(script)\n          })();\n        </script>"), { template: template }));
         return tslib_1.__assign(tslib_1.__assign({}, microResult), { html: '', links: [], styles: '', microTags: microTags });
     };

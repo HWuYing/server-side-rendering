@@ -43,8 +43,8 @@ let MicroManage = class MicroManage {
         return linkSubject;
     }
     createMicroTag(microName, microResult) {
-        const { html, styles, linkToStyles, microTags = [], error } = microResult;
-        const template = error ? '' : createMicroElementTemplate(microName, { initHtml: html, initStyle: styles, linkToStyles });
+        const { html, styles, linkToStyles, microTags = [] } = microResult;
+        const template = createMicroElementTemplate(microName, { initHtml: html, initStyle: styles, linkToStyles });
         microTags.push(templateZip(`<script id="create-${microName}-tag">{template}
           (function() {
             const script = document.getElementById('create-${microName}-tag');

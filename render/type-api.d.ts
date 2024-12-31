@@ -24,17 +24,3 @@ export interface RenderInterface {
         microFetchData: any;
     }>;
 }
-export interface ResourceOptions {
-    microName: string;
-    readonly fetch: Fetch;
-    readonly innerHeadFlag: string;
-    readonly innerHtmlFlag: string;
-    vmContext?: {
-        [key: string]: any;
-    };
-    getIndexPath(): string;
-    getEntryPath(): string;
-    getManifestFilePath(): string;
-    getStaticPath(url: string): string;
-    getMicroPath(microName: string, pathname: string): string;
-}

@@ -1,8 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createSsrVm = exports.Resource = void 0;
+exports.createSsrVm = exports.UseSSRControl = exports.SSR_STATIC_FOLDER = exports.SSR_FETCH = exports.Resource = void 0;
 var render_1 = require("./render");
 var resource_1 = require("./resource");
 Object.defineProperty(exports, "Resource", { enumerable: true, get: function () { return resource_1.Resource; } });
-var createSsrVm = function (options) { return new render_1.Render(options); };
+Object.defineProperty(exports, "SSR_FETCH", { enumerable: true, get: function () { return resource_1.SSR_FETCH; } });
+Object.defineProperty(exports, "SSR_STATIC_FOLDER", { enumerable: true, get: function () { return resource_1.SSR_STATIC_FOLDER; } });
+var ssr_controller_1 = require("./ssr.controller");
+Object.defineProperty(exports, "UseSSRControl", { enumerable: true, get: function () { return ssr_controller_1.UseSSRControl; } });
+var createSsrVm = function (resource) { return new render_1.Render(resource); };
 exports.createSsrVm = createSsrVm;

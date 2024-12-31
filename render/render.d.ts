@@ -1,9 +1,10 @@
 import { Request } from 'express';
-import { RenderInterface, ResourceOptions } from './type-api';
+import { Resource } from './resource';
+import { RenderInterface } from './type-api';
 export declare class Render implements RenderInterface {
-    private _compiledRender;
     private resource;
-    constructor(options: ResourceOptions);
+    private _compiledRender;
+    constructor(resource: Resource);
     private factoryVmScript;
     private _render;
     private createScriptTemplate;

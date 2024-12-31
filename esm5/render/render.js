@@ -2,10 +2,9 @@ import { __assign, __awaiter, __generator } from "tslib";
 import fs from 'fs';
 import { createRequire, Module as NativeModule } from 'module';
 import vm from 'vm';
-import { Resource } from './resource';
 var Render = /** @class */ (function () {
-    function Render(options) {
-        this.resource = new Resource(options);
+    function Render(resource) {
+        this.resource = resource;
     }
     Render.prototype.factoryVmScript = function () {
         var _this = this;

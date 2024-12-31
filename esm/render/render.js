@@ -2,10 +2,9 @@ import { __awaiter } from "tslib";
 import fs from 'fs';
 import { createRequire, Module as NativeModule } from 'module';
 import vm from 'vm';
-import { Resource } from './resource';
 export class Render {
-    constructor(options) {
-        this.resource = new Resource(options);
+    constructor(resource) {
+        this.resource = resource;
     }
     factoryVmScript() {
         const { entryFile } = this.resource;
